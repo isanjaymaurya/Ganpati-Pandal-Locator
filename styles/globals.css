@@ -2,11 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #5B21B6;
+  --primary-light: #7C3AED;
+  --primary-dark: #4C1D95;
+
+  --accent-pink: #EC4899;
+  --accent-orange: #F97316;
+  --accent-gold: #FFD700;
+
+  --gold-light: #FDE68A;
+  --orange-light: #FB923C;
+
+  --background: #FFF7ED;
+  --surface: #FFFFFF;
+
+  --text-primary: #1E1B4B;
+  --text-secondary: #6B7280;
+  --text-on-primary: #FFFFFF;
+
+  --border: #E9D5FF;
+  --success: #22C55E;
+  --danger: #EF4444;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
   line-height: 1.5;
+  background-color: var(--background);
 }
 
 * {
@@ -33,4 +58,8 @@ button {
 
 .leaflet-popup-content p {
   margin: 0px 0px 2.5px 0px !important;
+}
+
+.leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+  display: none !important;
 }

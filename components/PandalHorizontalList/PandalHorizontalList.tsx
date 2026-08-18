@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAppSelector } from '../../store/hooks';
 import type { RootState } from '../../store';
-import type { VisitedPandal } from '../../store/appSlice';
+import type { FavouritePandal } from '../../store/appSlice';
 import { useSwipeable } from 'react-swipeable';
 import type { IGanpatiPandal } from '../../types/global';
 import SinglePandalCard from '../SingleHorizontalPandalCard/SingleHorizontalPandalCard';
@@ -12,8 +12,8 @@ interface Props {
   onSelectPandal: (pandal: IGanpatiPandal) => void;
 }
 
-const VISITED_FILTERS = ['all', 'visited', 'non-visited'] as const;
-type VisitedFilterType = typeof VISITED_FILTERS[number];
+const FAVOURITE_FILTERS = ['all', 'favourited', 'non-favourited'] as const;
+type FavouriteFilterType = typeof FAVOURITE_FILTERS[number];
 
 const PandalHorizontalList: React.FC<Props> = ({ ganpatiPandals, selectedPandal, onSelectPandal }) => {
   const swipeHandlers = useSwipeable({
@@ -25,16 +25,16 @@ const PandalHorizontalList: React.FC<Props> = ({ ganpatiPandals, selectedPandal,
     },
     trackMouse: true,
   });
-  const visitedPandals = useAppSelector((state: RootState) => state.visitedPandals.visited);
-  const [visitedFilter, setVisitedFilter] = useState<VisitedFilterType>('all');
+    const favourites = useAppSelector((state: RootState) => state.favourites.favourites);
+  const [favouriteFilter, setFavouriteFilter] = useState<FavouriteFilterType>('all');
 
   // Filtered list based on filter
   const filteredPandals = useMemo(() => {
-    if (visitedFilter === 'all') return ganpatiPandals;
-    if (visitedFilter === 'visited') return ganpatiPandals.filter(p => visitedPandals.some((vp: VisitedPandal) => vp.name === p.name));
-    if (visitedFilter === 'non-visited') return ganpatiPandals.filter(p => !visitedPandals.some((vp: VisitedPandal) => vp.name === p.name));
+    if (favouriteFilter === 'all') return ganpatiPandals;
+    if (favouriteFilter === 'favourited') return ganpatiPandals.filter(p => favourites.some((fp: FavouritePandal) => fp.name === p.name));
+    if (favouriteFilter === 'non-favourited') return ganpatiPandals.filter(p => !favourites.some((fp: FavouritePandal) => fp.name === p.name));
     return ganpatiPandals;
-  }, [visitedFilter, ganpatiPandals, visitedPandals]);
+  }, [favouriteFilter, ganpatiPandals, favourites]);
 
   const initialIndex = selectedPandal
     ? filteredPandals.findIndex(
@@ -48,37 +48,37 @@ const PandalHorizontalList: React.FC<Props> = ({ ganpatiPandals, selectedPandal,
   return (
     <div className="flex flex-col h-[300px] w-full items-center" {...swipeHandlers}>
       {/* Filter Buttons */}
-      <div className="w-full flex gap-2 mb-2 justify-end">
-        {VISITED_FILTERS.map(f => (
+            <div className="w-full flex gap-2 mb-2 justify-end">
+        {FAVOURITE_FILTERS.map(f => (
           <button
             key={f}
-            className={`px-2 py-1 rounded text-xs border transition-colors duration-150 ${visitedFilter === f ? 'bg-blue-500 text-white font-bold shadow' : 'bg-white text-blue-500'} border-blue-500`}
+            className={`px-2 py-1 rounded text-xs border transition-colors duration-150 ${favouriteFilter === f ? 'bg-primary text-text-on-primary font-bold shadow' : 'bg-surface text-primary'} border-primary`}
             onClick={() => {
-              if (visitedFilter !== f) {
-                setVisitedFilter(f);
+              if (favouriteFilter !== f) {
+                setFavouriteFilter(f);
               }
             }}
           >
-            {f === 'all' ? 'All' : f === 'visited' ? 'Visited' : 'Non Visited'}
+            {f === 'all' ? 'All' : f === 'favourited' ? 'Favourited' : 'Not Favourited'}
           </button>
         ))}
       </div>
       <div className="w-full flex flex-col items-center justify-center">
         {filteredPandals.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500 text-base">No pandals found</div>
+          <div className="flex items-center justify-center h-full text-text-secondary text-base">No pandals found</div>
         ) : (
           <>
             {pandal ? <SinglePandalCard pandal={pandal} /> : null}
             {/* Visited toggle button */}
             <div className="flex justify-between items-center w-full mt-2">
               <button
-                className="px-3 py-1 rounded bg-blue-500 text-white disabled:bg-gray-300"
+                              className="px-3 py-1 rounded bg-primary text-text-on-primary disabled:opacity-40"
                 onClick={() => setCurrentIndex(i => Math.max(i - 1, 0))}
                 disabled={currentIndex === 0}
               >Prev</button>
               <span className="text-xs">{currentIndex + 1} / {filteredPandals.length}</span>
               <button
-                className="px-3 py-1 rounded bg-blue-500 text-white disabled:bg-gray-300"
+                              className="px-3 py-1 rounded bg-primary text-text-on-primary disabled:opacity-40"
                 onClick={() => setCurrentIndex(i => Math.min(i + 1, filteredPandals.length - 1))}
                 disabled={currentIndex === filteredPandals.length - 1}
               >Next</button>

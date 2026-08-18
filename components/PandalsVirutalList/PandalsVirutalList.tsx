@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import type { VisitedPandal } from '../../store/appSlice';
+import type { FavouritePandal } from '../../store/appSlice';
+import { addFavourite, removeFavourite } from '../../store/appSlice';
 import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
+import type { ListRowProps } from 'react-virtualized';
 import type { IGanpatiPandal } from '../../types/global';
 import SingleVerticalPandalCard from '../SingleVerticalPandalCard/SingleVerticalPandalCard';
 
@@ -15,14 +17,14 @@ const cache = new CellMeasurerCache({
   defaultHeight: 80,
 });
 
-const VISITED_FILTERS = ['all', 'visited', 'non-visited'] as const;
-type VisitedFilterType = typeof VISITED_FILTERS[number];
+const FAVOURITE_FILTERS = ['all', 'favourited', 'non-favourited'] as const;
+type FavouriteFilterType = typeof FAVOURITE_FILTERS[number];
 
 const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal }) => {
-  const visitedPandals = useAppSelector(state => state.visitedPandals.visited);
+  const favourites = useAppSelector(state => state.favourites.favourites);
   const dispatch = useAppDispatch();
   const [search, setSearch] = useState('');
-  const [visitedFilter, setVisitedFilter] = useState<VisitedFilterType>('all');
+  const [favouriteFilter, setFavouriteFilter] = useState<FavouriteFilterType>('all');
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   // Filter by search
@@ -34,13 +36,13 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
     );
   }, [ganpatiPandals, search]);
 
-  // Filter by visited
+    // Filter by favourite
   const filteredPandals = useMemo(() => {
-    if (visitedFilter === 'all') return searchedPandals;
-    if (visitedFilter === 'visited') return searchedPandals.filter(p => visitedPandals.some((vp: VisitedPandal) => vp.name === p.name));
-    if (visitedFilter === 'non-visited') return searchedPandals.filter(p => !visitedPandals.some((vp: VisitedPandal) => vp.name === p.name));
+    if (favouriteFilter === 'all') return searchedPandals;
+    if (favouriteFilter === 'favourited') return searchedPandals.filter(p => favourites.some((fp: FavouritePandal) => fp.name === p.name));
+    if (favouriteFilter === 'non-favourited') return searchedPandals.filter(p => !favourites.some((fp: FavouritePandal) => fp.name === p.name));
     return searchedPandals;
-  }, [visitedFilter, searchedPandals, visitedPandals]);
+  }, [favouriteFilter, searchedPandals, favourites]);
 
   // Helper to highlight matched text
   const highlightMatch = (text: string, filter: string) => {
@@ -49,14 +51,14 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
     const parts = text.split(regex);
     return parts.map((part, i) =>
       regex.test(part) ? (
-        <span key={i} className="bg-yellow-200">{part}</span>
+        <span key={i} className="bg-gold-light text-text-primary">{part}</span>
       ) : (
         part
       )
     );
   };
 
-  const rowRenderer = ({ index, key, style }: any) => {
+  const rowRenderer = ({ index, key, style }: ListRowProps) => {
     const pandal = filteredPandals[index];
     const isSelected = selectedIndex === index;
     return (
@@ -65,17 +67,17 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
           pandal={pandal}
           search={search}
           isSelected={isSelected}
-          visitedPandals={visitedPandals}
+          favourites={favourites}
           highlightMatch={highlightMatch}
           onSelect={() => {
             setSelectedIndex(index);
             if (onSelectPandal) onSelectPandal(pandal);
           }}
-          onToggleVisited={() => {
-            if (visitedPandals.some((vp: VisitedPandal) => vp.name === pandal.name)) {
-              dispatch(require('../../store/appSlice').unmarkVisited(pandal.name));
+                    onToggleFavourite={() => {
+            if (favourites.some((fp: FavouritePandal) => fp.name === pandal.name)) {
+              dispatch(removeFavourite(pandal.name));
             } else {
-              dispatch(require('../../store/appSlice').markVisited({ name: pandal.name, lat: pandal.latitude, lng: pandal.longitude }));
+              dispatch(addFavourite({ name: pandal.name, lat: Number(pandal.latitude), lng: Number(pandal.longitude) }));
             }
           }}
         />
@@ -90,23 +92,23 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
         value={search}
         onChange={e => setSearch(e.target.value)}
         placeholder="Search by name or address..."
-        className="mb-2 px-3 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-gray-100"
+        className="mb-2 px-3 py-2 border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-surface text-text-primary placeholder:text-text-secondary"
       />
-      {/* Visited Filter Buttons */}
+      {/* Favourite Filter Buttons */}
       <div className="flex gap-2 mb-2 mt-1 justify-end">
-        {VISITED_FILTERS.map(f => (
+        {FAVOURITE_FILTERS.map(f => (
           <button
             key={f}
-            className={`px-2 py-1 rounded text-xs border transition-colors duration-150 ${visitedFilter === f ? 'bg-blue-500 text-white font-bold shadow' : 'bg-white text-blue-500'} border-blue-500`}
-            onClick={() => { setVisitedFilter(f); setSelectedIndex(0); }}
+            className={`px-2 py-1 rounded text-xs border transition-colors duration-150 ${favouriteFilter === f ? 'bg-primary text-text-on-primary font-bold shadow' : 'bg-surface text-primary'} border-primary`}
+            onClick={() => { setFavouriteFilter(f); setSelectedIndex(null); }}
           >
-            {f === 'all' ? 'All' : f === 'visited' ? 'Visited' : 'Non Visited'}
+            {f === 'all' ? 'All' : f === 'favourited' ? 'Favourited' : 'Not Favourited'}
           </button>
         ))}
       </div>
       <div className="flex-1">
         {filteredPandals.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500 text-base">
+          <div className="flex items-center justify-center h-full text-text-secondary text-base">
             No pandals found {search.length > 0 ? `for "${search}"` : ''}
           </div>
         ) : (

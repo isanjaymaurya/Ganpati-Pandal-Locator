@@ -1,42 +1,37 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface VisitedPandal {
+export interface FavouritePandal {
   name: string;
   lat: number;
   lng: number;
 }
 
 export interface AppState {
-  visited: VisitedPandal[];
+  favourites: FavouritePandal[];
 }
 
 const initialState: AppState = {
-  visited: typeof window !== 'undefined' && localStorage.getItem('visitedPandals')
-    ? JSON.parse(localStorage.getItem('visitedPandals')!)
-    : [],
+  favourites: [],
 };
 
 const appSlice = createSlice({
-  name: 'app',
+  name: 'favourites',
   initialState,
   reducers: {
-    markVisited: (state, action: PayloadAction<VisitedPandal>) => {
-      if (!state.visited.some(p => p.name === action.payload.name)) {
-        state.visited.push(action.payload);
-        localStorage.setItem('visitedPandals', JSON.stringify(state.visited));
+    addFavourite: (state, action: PayloadAction<FavouritePandal>) => {
+      if (!state.favourites.some(p => p.name === action.payload.name)) {
+        state.favourites.push(action.payload);
       }
     },
-    unmarkVisited: (state, action: PayloadAction<string>) => {
-      state.visited = state.visited.filter(p => p.name !== action.payload);
-      localStorage.setItem('visitedPandals', JSON.stringify(state.visited));
+    removeFavourite: (state, action: PayloadAction<string>) => {
+      state.favourites = state.favourites.filter(p => p.name !== action.payload);
     },
-    setVisited: (state, action: PayloadAction<VisitedPandal[]>) => {
-      state.visited = action.payload;
-      localStorage.setItem('visitedPandals', JSON.stringify(state.visited));
+    setFavourites: (state, action: PayloadAction<FavouritePandal[]>) => {
+      state.favourites = action.payload;
     },
   },
 });
 
-export const { markVisited, unmarkVisited, setVisited } = appSlice.actions;
+export const { addFavourite, removeFavourite, setFavourites } = appSlice.actions;
 export default appSlice.reducer;
 

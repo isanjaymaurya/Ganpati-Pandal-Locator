@@ -1,5 +1,3 @@
-"use client"; // for Next.js app directory
-
 import { useState, useEffect } from "react";
 
 function useIsDesktop(breakpoint = 768) {

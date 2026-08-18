@@ -1,8 +1,8 @@
 {
-  "name": "m-ganpati-pandals-indicator",
+  "name": "ganpati-pandal-locator",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://isanjaymaurya.github.io/M-Ganpati-Pandals-Indicator/",
+  "homepage": "https://isanjaymaurya.github.io/ganpati-pandal-locator/",
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
@@ -17,6 +17,7 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^0.540.0",
     "next": "15.4.6",
+    "nextjs-progressbar": "^0.0.16",
     "papaparse": "^5.5.3",
     "postcss": "8.4.38",
     "react": "^19.0.0-rc.1",

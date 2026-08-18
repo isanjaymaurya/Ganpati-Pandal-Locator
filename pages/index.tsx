@@ -4,20 +4,14 @@ import Papa from 'papaparse';
 import axios from 'axios';
 import https from 'https';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import type { IGanpatiPandal } from '../types/global';
-import useIsDesktop from '@/hooks/useIsDesktop';
+import MainLayout from '@/components/layout/MainLayout';
+import Link from 'next/link';
 
 const PandalsVirutalList = dynamic(() => import('@/components/PandalsVirutalList/PandalsVirutalList'), {
   ssr: false,
   loading: () => null,
 });
-
-const PandalHorizontalList = dynamic(
-  () => import('@/components/PandalHorizontalList/PandalHorizontalList'),{
-    ssr: false
-  }
-);
 
 const GanpatiPandalsMap = dynamic(
   () => import('../components/GanpatiPandalsMap/GanpatiPandalsMap'),{
@@ -58,27 +52,27 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 };
 
 export default function Home({ ganpatiPandals }: Props) {
-  const isDesktop = useIsDesktop();
   const [selectedPandal, setSelectedPandal] = React.useState<IGanpatiPandal | null>(null);
   return (
-    <>
-      <Head>
-        <title>M-Ganpati Pandals Indicator</title>
-      </Head>
-      <main className="container mx-auto px-4 py-3 sm:py-12">
+    <MainLayout>
+      <section className="sm:py-12">
         <div className='flex gap-3 sm:gap-4 flex-col md:flex-row'>
           <div className='md:w-1/2 lg:w-2/3 w-full'>
             <GanpatiPandalsMap ganpatiPandals={ganpatiPandals} selectedPandal={selectedPandal} />
           </div>
           <div className='md:w-1/2 lg:w-1/3 w-full'>
-            {isDesktop ? (
-              <PandalsVirutalList ganpatiPandals={ganpatiPandals} onSelectPandal={setSelectedPandal} />
-            ) : (
-              <PandalHorizontalList ganpatiPandals={ganpatiPandals} selectedPandal={selectedPandal} onSelectPandal={setSelectedPandal} />
-            )}
+            <div className='flex justify-between items-center mb-2'>
+              <h2 className="text-text-primary font-bold">NEARBY PANDALS</h2>
+              <Link href="/pandals" className='text-sm text-primary-light hover:text-primary'>
+                <button>
+                  View All
+                </button>
+              </Link>
+            </div>
+            <PandalsVirutalList ganpatiPandals={ganpatiPandals} onSelectPandal={setSelectedPandal} />
           </div>
         </div>
-      </main>
-    </>
+      </section>
+    </MainLayout>
   );
-}
+};

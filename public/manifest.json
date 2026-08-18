@@ -1,6 +1,6 @@
 {
-  "name": "M-Ganpati-Pandals-Indicator",
-  "short_name": "M-Ganpati-Pandals-Indicator",
+  "name": "ganpati-pandal-locator",
+  "short_name": "ganpati-pandal-locator",
   "icons": [
     {
       "src": "web-app-manifest-192x192.png",
