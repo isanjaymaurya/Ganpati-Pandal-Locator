@@ -1,6 +1,5 @@
-# 🎉 M-Ganpati Pandals Indicator
+# 🎉 Ganpati Pandal Locator
 
-Welcome to the **M-Ganpati Pandals Indicator**!  
 A modern, fast, and mobile-friendly web app to discover Ganpati Pandals in Mumbai.  
 
 **Tech Stack:**
@@ -32,8 +31,8 @@ Follow these steps to run the project locally:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/isanjaymaurya/M-Ganpati-Pandals-Indicator
-   cd M-Ganpati-Pandals-Indicator
+   git clone https://github.com/isanjaymaurya/Ganpati-Pandal-Locator
+   cd Ganpati-Pandal-Locator
    ```
 
 2. **Install dependencies**
