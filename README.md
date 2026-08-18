@@ -1,19 +1,16 @@
 # 🎉 Ganpati Pandal Locator
 
-A modern, fast, and mobile-friendly web app to discover Ganpati Pandals in Mumbai.  
+A modern, fast, and mobile-friendly web app to discover Ganpati Pandals in Mumbai.
 
-**Tech Stack:**
-- [Next.js](https://nextjs.org/) (SSG)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Redux Toolkit](https://redux-toolkit.js.org/) for state management
-- [Redux Persist](https://github.com/rt2zz/redux-persist) for persistent state in Local Storage
-- [react-virtualized](https://github.com/bvaughn/react-virtualized) for performant lists
-- [react-swipeable](https://www.npmjs.com/package/react-swipeable) for swipe gestures
-- [Leaflet.js](http://leafletjs.com/) for interactive maps
-- [Carto](https://carto.com/) for map tiles and geospatial data
 
----
+## 📝 Add or Update Pandals
+
+Want to add or update a Ganpati Pandal?  
+Just use our public Google Sheet:
+
+👉 [Click here to add/update Ganpati Pandals Details](https://docs.google.com/spreadsheets/d/1Z7Dsgv8f0eGSysC6JkOATyBDJODeNd2p8IOiLvPJXlY/edit?usp=sharing)
+
+*Please provide your valuable suggestions and comments directly in the sheet!*
 
 ## 🚀 Features
 
@@ -22,7 +19,6 @@ A modern, fast, and mobile-friendly web app to discover Ganpati Pandals in Mumba
 - 📱 **Responsive**: Works great on mobile and desktop
 - 📝 **Easy Updates**: Data managed via a public Google Sheet
 - 🌙 **Modern UI**: Styled with Tailwind CSS
-
 ---
 
 ## 🛠️ Getting Started
@@ -68,11 +64,16 @@ npm start
 
 ---
 
-## 📝 Add or Update Pandals
 
-Want to add or update a Ganpati Pandal?  
-Just use our public Google Sheet:
+## 🛠️ Tech Stack:
+- [Next.js](https://nextjs.org/) (SSG)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/) for state management
+- [Redux Persist](https://github.com/rt2zz/redux-persist) for persistent state in Local Storage
+- [react-virtualized](https://github.com/bvaughn/react-virtualized) for performant lists
+- [react-swipeable](https://www.npmjs.com/package/react-swipeable) for swipe gestures
+- [Leaflet.js](http://leafletjs.com/) for interactive maps
+- [Carto](https://carto.com/) for map tiles and geospatial data
 
-👉 [Click here to add/update Ganpati Pandals Details](https://docs.google.com/spreadsheets/d/1Z7Dsgv8f0eGSysC6JkOATyBDJODeNd2p8IOiLvPJXlY/edit?usp=sharing)
-
-*Please provide your valuable suggestions and comments directly in the sheet!*
+---
