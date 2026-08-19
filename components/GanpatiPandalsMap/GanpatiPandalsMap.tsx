@@ -15,22 +15,26 @@ type Props = {
 
 const DEFAULT_CENTER: [number, number] = [18.9582, 72.8321];
 
+// Use the Next.js basePath (set in next.config.js for GitHub Pages) so that
+// public-folder assets resolve correctly under the /Ganpati-Pandal-Locator subpath.
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 const ganeshIcon = new L.Icon({
-  iconUrl: 'pending-visit-ganpati-pandal-marker.svg',
+  iconUrl: `${BASE}/pending-visit-ganpati-pandal-marker.svg`,
   iconSize: [50, 50],
   iconAnchor: [25, 50],
   popupAnchor: [0, -50],
 });
 
 const selectedIcon = new L.Icon({
-  iconUrl: 'visited-ganpati-pandal-marker.svg',
+  iconUrl: `${BASE}/visited-ganpati-pandal-marker.svg`,
   iconSize: [60, 60],
   iconAnchor: [30, 60],
   popupAnchor: [0, -60],
 });
 
 const userLocationIcon = new L.Icon({
-  iconUrl: 'user-location-marker.svg',
+  iconUrl: `${BASE}/user-location-marker.svg`,
   iconSize: [40, 40],
   iconAnchor: [20, 20],
   popupAnchor: [0, -22],

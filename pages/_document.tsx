@@ -1,22 +1,19 @@
 import { Html, Head, Main, NextScript } from 'next/document';
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 export default function Document() {
   return (
     <Html lang="en">
       <Head>
         <meta name="description" content="A map of Ganpati Pandals in Mumbai" />
         {/* Favicons */}
-        <link rel="icon" href="favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
-        {/* Apple Touch Icons */}
-        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+        <link rel="icon" href={`${BASE}/favicon.ico`} />
+        <link rel="apple-touch-icon" sizes="180x180" href={`${BASE}/apple-icon.png`} />
         {/* Manifest */}
-        {/* <link rel="manifest" href="manifest.json" /> */}
-        {/* Browserconfig */}
-        {/* <meta name="msapplication-config" content="browserconfig.xml" /> */}
+        <link rel="manifest" href={`${BASE}/manifest.json`} />
         {/* Theme color */}
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#5B21B6" />
       </Head>
       <body>
         <Main />
