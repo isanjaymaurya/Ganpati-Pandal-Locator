@@ -2,7 +2,7 @@ import React from 'react';
 import { GetStaticProps } from 'next';
 import Papa from 'papaparse';
 import axios from 'axios';
-import https from 'https';
+import { Agent } from 'node:https';
 import dynamic from 'next/dynamic';
 import type { IGanpatiPandal } from '../types/global';
 import MainLayout from '@/components/layout/MainLayout';
@@ -19,7 +19,7 @@ const GanpatiPandalsMap = dynamic(
   }
 );
 
-const agent = new https.Agent({
+const agent = new Agent({
   rejectUnauthorized: false,
 });
 

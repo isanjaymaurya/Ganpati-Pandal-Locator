@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import type { FavouritePandal } from '../../store/appSlice';
 import { addFavourite, removeFavourite } from '../../store/appSlice';
 import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
-import type { ListRowProps } from 'react-virtualized';
+
 import type { IGanpatiPandal } from '../../types/global';
 import SingleVerticalPandalCard from '../SingleVerticalPandalCard/SingleVerticalPandalCard';
 
@@ -58,7 +58,7 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
     );
   };
 
-  const rowRenderer = ({ index, key, style }: ListRowProps) => {
+  const rowRenderer = ({ index, key, style }: { index: number; key: string; style: React.CSSProperties }) => {
     const pandal = filteredPandals[index];
     const isSelected = selectedIndex === index;
     return (

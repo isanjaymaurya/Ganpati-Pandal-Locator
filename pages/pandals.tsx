@@ -2,7 +2,7 @@ import React from 'react';
 import { GetStaticProps } from 'next';
 import Papa from 'papaparse';
 import axios from 'axios';
-import https from 'https';
+import { Agent } from 'node:https';
 import dynamic from 'next/dynamic';
 import MainLayout from '@/components/layout/MainLayout';
 import type { IGanpatiPandal } from '@/types/global';
@@ -12,7 +12,7 @@ const PandalsVirutalList = dynamic(
   { ssr: false, loading: () => null }
 );
 
-const agent = new https.Agent({ rejectUnauthorized: false });
+const agent = new Agent({ rejectUnauthorized: false });
 
 type Props = {
   ganpatiPandals: IGanpatiPandal[];
