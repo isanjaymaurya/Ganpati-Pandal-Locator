@@ -31,8 +31,8 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
   const searchedPandals = useMemo(() => {
     return ganpatiPandals.filter(
       (p) =>
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.address.toLowerCase().includes(search.toLowerCase())
+                p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.location.toLowerCase().includes(search.toLowerCase())
     );
   }, [ganpatiPandals, search]);
 
@@ -91,7 +91,7 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
-        placeholder="Search by name or address..."
+        placeholder="Search by name or location..."
         className="mb-2 px-3 py-2 border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-surface text-text-primary placeholder:text-text-secondary"
       />
       {/* Favourite Filter Buttons */}

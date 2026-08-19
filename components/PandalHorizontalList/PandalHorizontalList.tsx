@@ -38,7 +38,7 @@ const PandalHorizontalList: React.FC<Props> = ({ ganpatiPandals, selectedPandal,
 
   const initialIndex = selectedPandal
     ? filteredPandals.findIndex(
-        p => p.name === selectedPandal.name && p.address === selectedPandal.address
+        p => p.name === selectedPandal.name && p.location === selectedPandal.location
       )
     : 0;
   const [currentIndex, setCurrentIndex] = React.useState(initialIndex >= 0 ? initialIndex : 0);

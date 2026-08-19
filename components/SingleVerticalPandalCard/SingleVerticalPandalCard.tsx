@@ -32,10 +32,14 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
       role="button"
       tabIndex={0}
     >
-      <img src={pandal?.image_url || '/icon1.png'} alt={pandal.name} className='w-14 h-14 rounded-lg object-cover border shadow-sm border-gold-500' />
+      <img  
+        src={pandal?.image_url || 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress'}
+        alt={pandal.name}
+        className='w-14 h-14 rounded-lg object-cover object-top border shadow-sm border-gold-500'
+      />
       <div>
-                <p className="font-semibold text-sm mb-0.5 text-text-primary">{highlightMatch(pandal.name, search)}</p>
-                <p className="text-xs text-text-secondary mb-0.5">{highlightMatch(pandal.address, search)}</p>
+          <p className="font-semibold text-sm mb-0.5 text-text-primary">{highlightMatch(pandal.name, search)}</p>
+          <p className="text-xs text-text-secondary mb-0.5">{highlightMatch(pandal.location, search)}</p>
       </div>
       <div className='justify-end flex-1 flex items-center'>
         <button

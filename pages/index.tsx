@@ -53,8 +53,12 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
 export default function Home({ ganpatiPandals }: Props) {
   const [selectedPandal, setSelectedPandal] = React.useState<IGanpatiPandal | null>(null);
+  const total = ganpatiPandals.length;
   return (
-    <MainLayout>
+    <MainLayout
+      title={`Ganpati Pandal Locator | ${total}+ Pandals`}
+      description={`Explore ${total}+ Ganpati pandals across Mumbai this Ganesh Chaturthi. Find pandals near you on an interactive map, get Google Maps directions, search by name or location, and save your favourites.`}
+    >
       <section className="sm:py-12">
         <div className='flex gap-3 sm:gap-4 flex-col md:flex-row'>
           <div className='md:w-1/2 lg:w-2/3 w-full'>

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'react-leaflet-markercluster/styles';
 
 import type { IGanpatiPandal } from '../../types/global';
 
@@ -15,7 +17,7 @@ type Props = {
 
 const DEFAULT_CENTER: [number, number] = [18.9582, 72.8321];
 
-// Use the Next.js basePath (set in next.config.js for GitHub Pages) so that
+// Use the Next.jst basePath (set in next.config.js for GitHub Pages) so that
 // public-folder assets resolve correctly under the /Ganpati-Pandal-Locator subpath.
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -82,7 +84,7 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
         mapRef.current.setView([lat, lng], 15, { animate: true });
       }
       const idx = ganpatiPandals.findIndex(
-        p => p.name === selectedPandal.name && p.address === selectedPandal.address
+                p => p.name === selectedPandal.name && p.location === selectedPandal.location
       );
       setPopupIdx(idx !== -1 ? idx : null);
     } else {
@@ -110,7 +112,7 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
         </Marker>
       )}
 
-            {/* Pandal markers */}
+                        {/* Pandal markers — selected pandal rendered outside cluster so it stays visible */}
       {ganpatiPandals.map((pandal, idx) => {
         const lat = parseFloat(pandal.latitude);
         const lng = parseFloat(pandal.longitude);
@@ -118,12 +120,13 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
         const isSelected =
           selectedPandal &&
           pandal.name === selectedPandal.name &&
-          pandal.address === selectedPandal.address;
+          pandal.location === selectedPandal.location;
+        if (!isSelected) return null;
         return (
           <Marker
-            key={idx}
-                        position={[lat, lng]}
-            icon={isSelected ? selectedIcon : ganeshIcon}
+            key={`selected-${idx}`}
+            position={[lat, lng]}
+            icon={selectedIcon}
             ref={(el: L.Marker | null) => {
               if (el && popupIdx === idx) {
                 el.openPopup();
@@ -132,7 +135,7 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
           >
             <Popup position={[lat, lng]}>
               <p className="text-base font-bold mb-0.5">{pandal.name}</p>
-              <p><strong>Address:</strong> {pandal.address}</p>
+              <p><strong>Location:</strong> {pandal.location}</p>
               <p>
                 <a href={pandal.gmap_link} target="_blank" rel="noopener noreferrer">
                   Google Map
@@ -142,6 +145,38 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
           </Marker>
         );
       })}
+
+      {/* Clustered pandal markers */}
+      <MarkerClusterGroup chunkedLoading>
+        {ganpatiPandals.map((pandal, idx) => {
+          const lat = parseFloat(pandal.latitude);
+          const lng = parseFloat(pandal.longitude);
+          if (!isValidCoord(lat, lng)) return null;
+          const isSelected =
+            selectedPandal &&
+            pandal.name === selectedPandal.name &&
+            pandal.location === selectedPandal.location;
+          // Skip selected pandal — it's rendered above, outside the cluster
+          if (isSelected) return null;
+          return (
+            <Marker
+              key={idx}
+              position={[lat, lng]}
+              icon={ganeshIcon}
+            >
+              <Popup position={[lat, lng]}>
+                <p className="text-base font-bold mb-0.5">{pandal.name}</p>
+                <p><strong>Location:</strong> {pandal.location}</p>
+                <p>
+                  <a href={pandal.gmap_link} target="_blank" rel="noopener noreferrer">
+                    Google Map
+                  </a>
+                </p>
+              </Popup>
+            </Marker>
+          );
+        })}
+      </MarkerClusterGroup>
     </MapContainer>
   );
 }
