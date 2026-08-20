@@ -38,8 +38,8 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
         className='w-14 h-14 rounded-lg object-cover object-top border shadow-sm border-gold-500'
       />
       <div>
-          <p className="font-semibold text-sm mb-0.5 text-text-primary">{highlightMatch(pandal.name, search)}</p>
-          <p className="text-xs text-text-secondary mb-0.5">{highlightMatch(pandal.location, search)}</p>
+        <p className="font-semibold text-sm mb-0.5 text-text-primary">{highlightMatch(pandal.name, search)}</p>
+        <p className="text-xs text-text-secondary mb-0.5">{highlightMatch(pandal.location, search)}</p>
       </div>
       <div className='justify-end flex-1 flex items-center'>
         <button

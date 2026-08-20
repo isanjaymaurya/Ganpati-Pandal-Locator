@@ -1,11 +1,80 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'react-leaflet-markercluster/styles';
 
 import type { IGanpatiPandal } from '../../types/global';
+import PandalMarker from './PandalMarker';
+
+// ── Locate Me control ──────────────────────────────────────────────────────
+function LocateControl({
+  userLocation,
+  onLocate,
+}: {
+  userLocation: [number, number] | null;
+  onLocate: (coords: [number, number]) => void;
+}) {
+  const map = useMap();
+  const [locating, setLocating] = useState(false);
+
+  const handleClick = () => {
+    if (userLocation) {
+      map.setView(userLocation, 15, { animate: true });
+      return;
+    }
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+        onLocate(coords);
+        map.setView(coords, 15, { animate: true });
+        setLocating(false);
+      },
+      () => setLocating(false),
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
+  return (
+    <div className="leaflet-top leaflet-right" style={{ pointerEvents: 'auto' }}>
+      <div className="leaflet-control leaflet-bar" style={{ border: 'none', marginTop: '10px', marginRight: '10px' }}>
+        <button
+          onClick={handleClick}
+          title={userLocation ? 'Go to my location' : 'Find my location'}
+          style={{
+            width: 34,
+            height: 34,
+            background: 'var(--surface)',
+            border: '2px solid var(--border)',
+            borderRadius: 6,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
+            padding: 0,
+          }}
+        >
+          {locating ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite' }}>
+              <circle cx="12" cy="12" r="10" strokeOpacity="0.3" />
+              <path d="M12 2a10 10 0 0 1 10 10" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={userLocation ? 'var(--primary)' : 'var(--text-secondary)'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+              <circle cx="12" cy="12" r="8" strokeDasharray="2 3" />
+            </svg>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 const isValidCoord = (lat: number, lng: number): boolean =>
   isFinite(lat) && isFinite(lng) && lat !== 0 && lng !== 0;
@@ -21,25 +90,32 @@ const DEFAULT_CENTER: [number, number] = [18.9582, 72.8321];
 // public-folder assets resolve correctly under the /Ganpati-Pandal-Locator subpath.
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
-const ganeshIcon = new L.Icon({
-  iconUrl: `${BASE}/pending-visit-ganpati-pandal-marker.svg`,
-  iconSize: [50, 50],
-  iconAnchor: [25, 50],
-  popupAnchor: [0, -50],
-});
-
-const selectedIcon = new L.Icon({
-  iconUrl: `${BASE}/visited-ganpati-pandal-marker.svg`,
-  iconSize: [60, 60],
-  iconAnchor: [30, 60],
-  popupAnchor: [0, -60],
-});
-
-const userLocationIcon = new L.Icon({
-  iconUrl: `${BASE}/user-location-marker.svg`,
-  iconSize: [40, 40],
-  iconAnchor: [20, 20],
-  popupAnchor: [0, -22],
+const userLocationIcon = L.divIcon({
+  className: '',
+    html: `
+    <div style="display:flex;flex-direction:column;align-items:center;pointer-events:none;">
+      <img src="${BASE}/user-location-marker.svg" style="width:40px;height:40px;" />
+      <div style="display:flex;flex-direction:column;align-items:center;margin-top:3px;pointer-events:none;">
+        <div style="
+          width:0;height:0;
+          border-left:6px solid transparent;
+          border-right:6px solid transparent;
+          border-bottom:6px solid var(--accent-blue);
+        "></div>
+        <div class="shadow-xs rounded-full bg-blue-800 border-2 border-blue-400 px-2.5 py-1" style="
+          color:var(--text-on-primary);
+          font-size:9px;
+          font-weight:700;
+          letter-spacing:0.05em;
+          white-space:nowrap;
+          pointer-events:none;
+        ">YOU ARE HERE</div>
+      </div>
+    </div>
+  `,
+  iconSize: [80, 60],
+  iconAnchor: [40, 40],
+  popupAnchor: [0, -44],
 });
 
 export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Props) {
@@ -69,10 +145,10 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-    // Pan to selected pandal when it changes
+  // Pan to selected pandal when it changes
   useEffect(() => {
     if (selectedPandal && mapRef.current) {
       const lat = parseFloat(selectedPandal.latitude);
@@ -84,7 +160,7 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
         mapRef.current.setView([lat, lng], 15, { animate: true });
       }
       const idx = ganpatiPandals.findIndex(
-                p => p.name === selectedPandal.name && p.location === selectedPandal.location
+        p => p.name === selectedPandal.name && p.location === selectedPandal.location
       );
       setPopupIdx(idx !== -1 ? idx : null);
     } else {
@@ -93,12 +169,18 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
   }, [selectedPandal, ganpatiPandals]);
 
   return (
-    <MapContainer
+        <MapContainer
       center={DEFAULT_CENTER}
       zoom={12}
       style={{ height: '500px', width: '100%' }}
       ref={mapRef}
+      zoomControl={false}
     >
+      <ZoomControl position="bottomright" />
+      <LocateControl
+        userLocation={userLocation}
+        onLocate={(coords) => setUserLocation(coords)}
+      />
       <TileLayer
         url="https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
       />
@@ -112,7 +194,7 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
         </Marker>
       )}
 
-                        {/* Pandal markers — selected pandal rendered outside cluster so it stays visible */}
+      {/* Selected pandal — rendered outside cluster so it stays visible */}
       {ganpatiPandals.map((pandal, idx) => {
         const lat = parseFloat(pandal.latitude);
         const lng = parseFloat(pandal.longitude);
@@ -123,26 +205,14 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
           pandal.location === selectedPandal.location;
         if (!isSelected) return null;
         return (
-          <Marker
+          <PandalMarker
             key={`selected-${idx}`}
-            position={[lat, lng]}
-            icon={selectedIcon}
-            ref={(el: L.Marker | null) => {
-              if (el && popupIdx === idx) {
-                el.openPopup();
-              }
+            pandal={pandal}
+            markerKey={`selected-${idx}`}
+            markerRef={(el) => {
+              if (el && popupIdx === idx) el.openPopup();
             }}
-          >
-            <Popup position={[lat, lng]}>
-              <p className="text-base font-bold mb-0.5">{pandal.name}</p>
-              <p><strong>Location:</strong> {pandal.location}</p>
-              <p>
-                <a href={pandal.gmap_link} target="_blank" rel="noopener noreferrer">
-                  Google Map
-                </a>
-              </p>
-            </Popup>
-          </Marker>
+          />
         );
       })}
 
@@ -159,21 +229,11 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
           // Skip selected pandal — it's rendered above, outside the cluster
           if (isSelected) return null;
           return (
-            <Marker
+            <PandalMarker
               key={idx}
-              position={[lat, lng]}
-              icon={ganeshIcon}
-            >
-              <Popup position={[lat, lng]}>
-                <p className="text-base font-bold mb-0.5">{pandal.name}</p>
-                <p><strong>Location:</strong> {pandal.location}</p>
-                <p>
-                  <a href={pandal.gmap_link} target="_blank" rel="noopener noreferrer">
-                    Google Map
-                  </a>
-                </p>
-              </Popup>
-            </Marker>
+              pandal={pandal}
+              markerKey={idx}
+            />
           );
         })}
       </MarkerClusterGroup>

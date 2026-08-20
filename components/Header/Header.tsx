@@ -2,21 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const HEADER_STYLES: React.CSSProperties = {
-  position: 'sticky',
-  top: 0,
-  zIndex: 1000,
-    backgroundColor: 'var(--primary)',
-  color: 'var(--text-on-primary)',
-  height: '60px',
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-};
-
 const LOGO_LINK_STYLES: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
@@ -33,9 +18,9 @@ const TITLE_STYLES: React.CSSProperties = {
   margin: 0,
 };
 
-const MobileHeader: React.FC = () => {
+const Header: React.FC = () => {
   return (
-    <header style={HEADER_STYLES}>
+    <header className="flex items-center justify-between px-4 py-2 sticky top-0 z-[9999] bg-primary text-text-on-primary h-16 shadow-md">
       <Link href="/" style={LOGO_LINK_STYLES} aria-label="Go to home page">
         <Image
           src="/icon1.png"
@@ -51,4 +36,4 @@ const MobileHeader: React.FC = () => {
   );
 };
 
-export default MobileHeader;
+export default Header;

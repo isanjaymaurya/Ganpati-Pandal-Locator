@@ -15,8 +15,8 @@ const SinglePandalCard: React.FC<Props> = ({ pandal }) => {
   const isFavourite = favourites.some((fp: FavouritePandal) => fp.name === pandal.name);
   return (
     <div className="bg-surface border border-border px-4 py-4 rounded-lg shadow cursor-pointer transition-colors w-full">
-        <p className="font-semibold text-base text-center text-text-primary">{pandal.name}</p>
-        <p className="text-xs text-text-secondary text-center">{pandal.location}</p>
+      <h1 className="font-semibold text-base text-center text-text-primary capitalize">{pandal.name}</h1>
+      <p className="text-xs text-text-secondary text-center">{pandal.location}</p>
       <hr className='my-2'/>
       <button
         className={`flex text-sm justify-center p-2 rounded-xl border text-center w-full text-text-on-primary transition-colors outline-none ${isFavourite ? 'bg-success hover:opacity-90' : 'bg-primary-light hover:bg-primary'}`}

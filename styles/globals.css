@@ -10,6 +10,7 @@
   --accent-pink: #EC4899;
   --accent-orange: #F97316;
   --accent-gold: #FFD700;
+  --accent-blue: #3B82F6;
 
   --gold-light: #FDE68A;
   --orange-light: #FB923C;
@@ -60,6 +61,29 @@ button {
   margin: 0px 0px 2.5px 0px !important;
 }
 
-.leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers {
   display: none !important;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar{
+  border: 0px !important;
+}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out {
+  font-size: 20px;
+}
+
+.leaflet-touch .leaflet-bar a {
+  width: 28px;
+  height: 28px;
+}
+
+.leaflet-touch .leaflet-bar a:first-child {
+    margin-bottom: 6px;
 }

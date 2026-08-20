@@ -30,8 +30,8 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
   // Filter by search
   const searchedPandals = useMemo(() => {
     return ganpatiPandals.filter(
-      (p) =>
-                p.name.toLowerCase().includes(search.toLowerCase()) ||
+            (p) =>
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
         p.location.toLowerCase().includes(search.toLowerCase())
     );
   }, [ganpatiPandals, search]);
@@ -73,7 +73,7 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
             setSelectedIndex(index);
             if (onSelectPandal) onSelectPandal(pandal);
           }}
-                    onToggleFavourite={() => {
+                              onToggleFavourite={() => {
             if (favourites.some((fp: FavouritePandal) => fp.name === pandal.name)) {
               dispatch(removeFavourite(pandal.name));
             } else {
