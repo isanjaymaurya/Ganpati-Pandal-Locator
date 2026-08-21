@@ -1,12 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'react-leaflet-markercluster/styles';
+import { LocateFixed } from 'lucide-react';
 
 import type { IGanpatiPandal } from '../../types/global';
 import PandalMarker from './PandalMarker';
+
+// ── Zoom logger ──────────────────────────────────────────────────────
+function ZoomLogger() {
+  useMapEvents({
+    zoomend: (e) => {
+      console.log('Map zoom level:', e.target.getZoom());
+    },
+  });
+  return null;
+}
 
 // ── Locate Me control ──────────────────────────────────────────────────────
 function LocateControl({
@@ -38,37 +49,18 @@ function LocateControl({
     );
   };
 
-  return (
-    <div className="leaflet-top leaflet-right" style={{ pointerEvents: 'auto' }}>
-      <div className="leaflet-control leaflet-bar" style={{ border: 'none', marginTop: '10px', marginRight: '10px' }}>
+    return (
+    <div className="leaflet-top leaflet-right pointer-events-auto">
+      <div className="leaflet-control leaflet-bar !border-none !mt-2.5 !mr-2.5">
         <button
           onClick={handleClick}
           title={userLocation ? 'Go to my location' : 'Find my location'}
-          style={{
-            width: 34,
-            height: 34,
-            background: 'var(--surface)',
-            border: '2px solid var(--border)',
-            borderRadius: 6,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
-            padding: 0,
-          }}
+          className="rounded-full border border-black bg-white flex items-center justify-center shadow-sm w-8 h-8"
         >
-          {locating ? (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite' }}>
-              <circle cx="12" cy="12" r="10" strokeOpacity="0.3" />
-              <path d="M12 2a10 10 0 0 1 10 10" />
-            </svg>
+                    {locating ? (
+            <LocateFixed className="w-6 h-4 animate-spin" />
           ) : (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={userLocation ? 'var(--primary)' : 'var(--text-secondary)'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
-              <circle cx="12" cy="12" r="8" strokeDasharray="2 3" />
-            </svg>
+            <LocateFixed className="w-6 h-4" />
           )}
         </button>
       </div>
@@ -92,24 +84,12 @@ const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
 const userLocationIcon = L.divIcon({
   className: '',
-    html: `
-    <div style="display:flex;flex-direction:column;align-items:center;pointer-events:none;">
-      <img src="${BASE}/user-location-marker.svg" style="width:40px;height:40px;" />
-      <div style="display:flex;flex-direction:column;align-items:center;margin-top:3px;pointer-events:none;">
-        <div style="
-          width:0;height:0;
-          border-left:6px solid transparent;
-          border-right:6px solid transparent;
-          border-bottom:6px solid var(--accent-blue);
-        "></div>
-        <div class="shadow-xs rounded-full bg-blue-800 border-2 border-blue-400 px-2.5 py-1" style="
-          color:var(--text-on-primary);
-          font-size:9px;
-          font-weight:700;
-          letter-spacing:0.05em;
-          white-space:nowrap;
-          pointer-events:none;
-        ">YOU ARE HERE</div>
+  html: `
+    <div class="flex flex-col items-center pointer-events-none">
+      <img src="${BASE}/user-location-marker.svg" class="w-10 h-10" />
+      <div class="flex flex-col items-center mt-1 pointer-events-none">
+        <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--accent-blue);"></div>
+        <div class="shadow-xs rounded-full bg-blue-800 border-2 border-blue-400 px-2.5 py-1 text-white text-[9px] font-bold tracking-wide whitespace-nowrap pointer-events-none">YOU ARE HERE</div>
       </div>
     </div>
   `,
@@ -169,14 +149,15 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
   }, [selectedPandal, ganpatiPandals]);
 
   return (
-        <MapContainer
+            <MapContainer
       center={DEFAULT_CENTER}
       zoom={12}
-      style={{ height: '500px', width: '100%' }}
+      className="h-[500px] w-full"
       ref={mapRef}
       zoomControl={false}
     >
       <ZoomControl position="bottomright" />
+      {/* <ZoomLogger /> */}
       <LocateControl
         userLocation={userLocation}
         onLocate={(coords) => setUserLocation(coords)}

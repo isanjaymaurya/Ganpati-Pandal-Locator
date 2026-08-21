@@ -27,7 +27,7 @@ const MainLayout = ({
                 <meta property="og:title" content={pageTitle} />
                 <meta property="og:description" content={pageDescription} />
             </Head>
-            <Header />
+            <Header isDesktop={isDesktop} />
             <main className="container mx-auto">
                 {children}
             </main>

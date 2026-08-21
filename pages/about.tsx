@@ -13,6 +13,7 @@ import {
   Sparkles,
   Map,
 } from 'lucide-react';
+import Image from 'next/image';
 
 const FEATURES = [
   {
@@ -59,15 +60,15 @@ const FEATURES = [
   },
 ];
 
-export default function InfoPage() {
+export default function AboutPage() {
   return (
     <MainLayout>
       <div className="max-w-2xl mx-auto px-4 py-6 pb-24 md:pb-8 flex flex-col gap-6">
 
         {/* ── Hero ── */}
         <div className="rounded-2xl bg-primary px-6 py-8 flex flex-col items-center text-center shadow-lg">
-          <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center mb-4 shadow-md">
-            <MapPin size={32} className="text-text-on-primary" strokeWidth={2} />
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4">
+            <Image src="/ganpati-idol.png" alt="Ganpati Idol" width={64} height={64} />
           </div>
           <h1 className="text-2xl font-extrabold text-text-on-primary tracking-tight mb-1">
             Ganpati Pandal Locator

@@ -1,37 +1,40 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import DesktopNav from './DesktopNav';
 
-const LOGO_LINK_STYLES: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  textDecoration: 'none',
-};
+interface HeaderProps {
+  isDesktop: boolean;
+}
 
-const TITLE_STYLES: React.CSSProperties = {
-  fontSize: '24px',
-  fontWeight: 'bold',
-  textTransform: 'uppercase',
-    color: 'var(--text-on-primary)',
-  display: 'flex',
-  alignItems: 'center',
-  margin: 0,
-};
-
-const Header: React.FC = () => {
+const Header: React.FC<HeaderProps> = ({ isDesktop }) => {
   return (
-    <header className="flex items-center justify-between px-4 py-2 sticky top-0 z-[9999] bg-primary text-text-on-primary h-16 shadow-md">
-      <Link href="/" style={LOGO_LINK_STYLES} aria-label="Go to home page">
-        <Image
-          src="/icon1.png"
-          alt="Ganpati Pandal Locator Logo"
-          height={40}
-          width={40}
-          style={{ objectFit: 'contain' }}
-          priority
+    <header
+      className="sticky top-0 z-[9999] shadow-md w-full flex items-center justify-between h-14"
+      style={{ 
+        backgroundColor: "#22065C",
+        background: "linear-gradient(90deg, rgba(34, 6, 92, 1) 0%, rgba(18, 3, 66, 1) 50%, rgba(19, 3, 70, 1) 100%)"
+       }}
+      >
+      <div className="flex items-center w-full ml-3 gap-2 md:gap-3">
+        <Link href="/" className="hover:text-purple-300 transition-colors">
+          <img
+            src="/ganpati-idol.png"
+            alt=""
+            className="h-12"
+          />
+        </Link>
+        <img
+          src="/ganpati-locator-title.png"
+          alt=""
+          className="h-10"
         />
-      </Link>
-      <h1 style={TITLE_STYLES}>Ganpati Pandal Locator</h1>
+        {isDesktop && <DesktopNav className="ml-auto mr-6" />}
+        <img
+          src="/fancy-design-for-mobile.png"
+          alt=""
+          className="h-14 md:hidden ml-auto"
+        />
+      </div>
     </header>
   );
 };

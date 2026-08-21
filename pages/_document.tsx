@@ -9,7 +9,7 @@ export default function Document() {
         <meta name="description" content="A map of Ganpati Pandals in Mumbai" />
         {/* Favicons */}
         <link rel="icon" href={`${BASE}/favicon.ico`} />
-        <link rel="apple-touch-icon" sizes="180x180" href={`${BASE}/apple-icon.png`} />
+        <link rel="apple-touch-icon" sizes="180x180" href={`${BASE}/apple-touch-icon.png`} />
         {/* Manifest */}
         <link rel="manifest" href={`${BASE}/manifest.json`} />
         {/* Theme color */}

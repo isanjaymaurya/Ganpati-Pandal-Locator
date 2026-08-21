@@ -26,9 +26,8 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
 
   return (
     <div
-      className={`border border-border px-3 py-2 flex gap-2 items-center bg-surface rounded-xl ${isSelected ? 'ring-2 ring-primary' : ''}`}
+      className={`border border-border px-3 py-2 flex gap-2 items-center bg-surface rounded-xl cursor-pointer ${isSelected ? 'ring-2 ring-primary' : ''}`}
       onClick={onSelect}
-      style={{ cursor: 'pointer' }}
       role="button"
       tabIndex={0}
     >

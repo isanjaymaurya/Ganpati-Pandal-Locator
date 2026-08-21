@@ -25,8 +25,8 @@ export const NAV_ITEMS: NavItem[] = [
     icon: <Heart size={ICON_SIZE} strokeWidth={1.8} />,
   },
   {
-    href: '/info',
-    label: 'Info',
+    href: '/about',
+    label: 'About',
     icon: <Info size={ICON_SIZE} strokeWidth={1.8} />,
   },
 ];
