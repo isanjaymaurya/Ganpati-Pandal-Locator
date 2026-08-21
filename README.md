@@ -1,10 +1,16 @@
 <p align="center">
-  <img src="./public/ganpati-idol.png" alt="Ganpati Idol" height="120" /><br/>
+  <img src="https://raw.githubusercontent.com/isanjaymaurya/Ganpati-Pandal-Locator/main/public/ganpati-idol.png" alt="Ganpati Pandal Locator Logo" height="120" />
 </p>
 
 <h1 align="center">🎉 Ganpati Pandal Locator</h1>
 
 <p align="center">A modern, fast, and mobile-friendly web app to discover Ganpati Pandals in Mumbai.</p>
+
+<p align="center">
+  <a href="https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/">
+    <img src="https://img.shields.io/badge/Live%20Demo-%F0%9F%9A%80%20View%20on%20GitHub%20Pages-brightgreen?style=for-the-badge" alt="Live Demo" />
+  </a>
+</p>
 
 
 ## 📝 Add or Update Pandals

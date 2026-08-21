@@ -8,16 +8,7 @@ import { LocateFixed } from 'lucide-react';
 
 import type { IGanpatiPandal } from '../../types/global';
 import PandalMarker from './PandalMarker';
-
-// ── Zoom logger ──────────────────────────────────────────────────────
-function ZoomLogger() {
-  useMapEvents({
-    zoomend: (e) => {
-      console.log('Map zoom level:', e.target.getZoom());
-    },
-  });
-  return null;
-}
+import { BASE } from '@/constants/env';
 
 // ── Locate Me control ──────────────────────────────────────────────────────
 function LocateControl({
@@ -78,9 +69,7 @@ type Props = {
 
 const DEFAULT_CENTER: [number, number] = [18.9582, 72.8321];
 
-// Use the Next.jst basePath (set in next.config.js for GitHub Pages) so that
-// public-folder assets resolve correctly under the /Ganpati-Pandal-Locator subpath.
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 
 const userLocationIcon = L.divIcon({
   className: '',

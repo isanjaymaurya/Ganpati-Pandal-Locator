@@ -9,10 +9,10 @@ const BottomNavigation: React.FC = () => {
   return (
     <nav
       aria-label="Bottom navigation"
-      className="flex items-stretch fixed bottom-0 left-0 right-0 mx-2 mb-0.5 rounded-xl shadow-lg h-14 shadow-gray-300 border border-indigo-800 overflow-hidden z-[1000]"
+      className="flex items-stretch fixed bottom-0 left-0 right-0 mx-2 mb-0.5 rounded-xl shadow-lg h-12 shadow-gray-300 border border-indigo-800 overflow-hidden z-[1000]"
       style={{ 
         backgroundColor: "#22065C",
-        background: "linear-gradient(180deg, rgba(34, 6, 92, 1) 0%, rgba(18, 3, 66, 1) 50%, rgba(19, 3, 70, 1) 100%)"
+        background: "linear-gradient(180deg, rgb(56, 21, 128) 0%, rgb(33, 12, 101) 50%, rgb(36, 15, 102) 100%)"
        }}
     >
       {NAV_ITEMS.map(({ href, label, icon }) => {

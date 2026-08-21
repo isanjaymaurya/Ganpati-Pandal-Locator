@@ -1,6 +1,5 @@
 import { Html, Head, Main, NextScript } from 'next/document';
-
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+import { BASE } from '@/constants/env';
 
 export default function Document() {
   return (

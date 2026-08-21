@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import DesktopNav from './DesktopNav';
+import { BASE } from '@/constants/env';
 
 interface HeaderProps {
   isDesktop: boolean;
@@ -18,19 +19,19 @@ const Header: React.FC<HeaderProps> = ({ isDesktop }) => {
       <div className="flex items-center w-full ml-3 gap-2 md:gap-3">
         <Link href="/" className="hover:text-purple-300 transition-colors">
           <img
-            src="/ganpati-idol.png"
+            src={`${BASE}/ganpati-idol.png`}
             alt=""
             className="h-12"
           />
         </Link>
         <img
-          src="/ganpati-locator-title.png"
+          src={`${BASE}/ganpati-locator-title.png`}
           alt=""
           className="h-10"
         />
         {isDesktop && <DesktopNav className="ml-auto mr-6" />}
         <img
-          src="/fancy-design-for-mobile.png"
+          src={`${BASE}/fancy-design-for-mobile.png`}
           alt=""
           className="h-14 md:hidden ml-auto"
         />
