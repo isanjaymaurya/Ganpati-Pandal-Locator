@@ -5,7 +5,7 @@ import {
   Star,
   Heart,
   List,
-  Github,
+  GitBranch,
   FileSpreadsheet,
   Users,
   Navigation,
@@ -14,6 +14,7 @@ import {
   Map,
 } from 'lucide-react';
 import Image from 'next/image';
+import { BASE } from '@/constants/env';
 
 const FEATURES = [
   {
@@ -66,9 +67,15 @@ export default function AboutPage() {
       <div className="max-w-2xl mx-auto px-4 py-6 pb-24 md:pb-8 flex flex-col gap-6">
 
         {/* ── Hero ── */}
-        <div className="rounded-2xl bg-primary px-6 py-8 flex flex-col items-center text-center shadow-lg">
+        <div
+          className="rounded-2xl px-6 py-8 flex flex-col items-center text-center shadow-lg"
+          style={{ 
+            backgroundColor: "#22065C",
+            background: "linear-gradient(180deg, rgb(56, 21, 128) 0%, rgb(33, 12, 101) 50%, rgb(36, 15, 102) 100%)"
+          }}
+        >
           <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4">
-            <Image src="/ganpati-idol.png" alt="Ganpati Idol" width={64} height={64} />
+            <Image src={`${BASE}/ganpati-idol.png`} alt="Ganpati Idol" width={64} height={64} />
           </div>
           <h1 className="text-2xl font-extrabold text-text-on-primary tracking-tight mb-1">
             Ganpati Pandal Locator
@@ -131,11 +138,9 @@ export default function AboutPage() {
           <div className="rounded-xl bg-background border border-border p-4 mb-4 flex items-start gap-3">
             <Users size={18} className="text-primary-light shrink-0 mt-0.5" />
             <p className="text-xs text-text-secondary leading-relaxed">
-              Fill in the pandal <strong className="text-text-primary">name</strong>,{' '}
-              <strong className="text-text-primary">address</strong>,{' '}
-              <strong className="text-text-primary">latitude &amp; longitude</strong>,{' '}
-              <strong className="text-text-primary">how to reach</strong>, and{' '}
-              <strong className="text-text-primary">visarjan date</strong>. That&apos;s it!
+              Fill in the pandal <strong className="text-text-primary">Name</strong>,{' '}
+              <strong className="text-text-primary">Latitude &amp; Longitude</strong>,{' '}
+              <strong className="text-text-primary">Google Map Link</strong>. That&apos;s it!
             </p>
           </div>
           <a
@@ -154,7 +159,7 @@ export default function AboutPage() {
         <div className="rounded-2xl bg-primary-dark px-6 py-5 shadow-sm">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-8 h-8 rounded-lg bg-primary-light/30 flex items-center justify-center">
-              <Github size={18} className="text-text-on-primary" />
+              <GitBranch size={18} className="text-text-on-primary" />
             </div>
             <h2 className="text-base font-bold text-text-on-primary">Open Source on GitHub</h2>
           </div>
