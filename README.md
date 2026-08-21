@@ -1,6 +1,10 @@
-# 🎉 Ganpati Pandal Locator
+<p align="center">
+  <img src="./public/ganpati-idol.png" alt="Ganpati Idol" height="120" /><br/>
+</p>
 
-A modern, fast, and mobile-friendly web app to discover Ganpati Pandals in Mumbai.
+<h1 align="center">🎉 Ganpati Pandal Locator</h1>
+
+<p align="center">A modern, fast, and mobile-friendly web app to discover Ganpati Pandals in Mumbai.</p>
 
 
 ## 📝 Add or Update Pandals
