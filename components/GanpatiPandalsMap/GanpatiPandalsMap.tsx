@@ -76,7 +76,7 @@ const userLocationIcon = L.divIcon({
       <img src="${BASE}/user-location-marker.svg" class="w-10 h-10" />
       <div class="flex flex-col items-center mt-1 pointer-events-none">
         <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--accent-gold);"></div>
-        <div class="bg-orange-100 text-black shadow-md rounded-full px-2.5 py-1 text-white text-[9px] font-bold tracking-wide whitespace-nowrap border-2 border-accent-gold pointer-events-none">YOU ARE HERE</div>
+        <div class="bg-orange-100 text-black shadow-md rounded-full px-2.5 py-1 text-black text-[9px] font-bold tracking-wide whitespace-nowrap border-2 border-accent-gold pointer-events-none">YOU ARE HERE</div>
       </div>
     </div>
   `,
