@@ -10,7 +10,7 @@ export default function NotFoundPage() {
       title="Page Not Found | Ganpati Pandal Locator"
       description="The page you are looking for does not exist. Head back to the Ganpati Pandal Locator to explore pandals near you."
     >
-      <div className="max-w-md mx-auto px-4 py-12 pb-24 md:pb-12 flex flex-col items-center gap-6 text-center">
+      <div className="max-w-md mx-auto px-4 py-12 md:pb-12 flex flex-col items-center gap-6 text-center">
 
         {/* Icon + 404 */}
         <div className="rounded-2xl px-8 py-10 flex flex-col items-center shadow-lg w-full">

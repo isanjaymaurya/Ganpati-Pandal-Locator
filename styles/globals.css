@@ -3,34 +3,42 @@
 @tailwind utilities;
 
 :root {
-  --primary: #5B21B6;
-  --primary-light: #7C3AED;
-  --primary-dark: #4C1D95;
+  /* ── Primary: Deep Saffron — the most sacred Hindu colour ── */
+  --primary: #C45000;        /* deep saffron — dhwaj, robes */
+  --primary-light: #E8650A;  /* marigold orange — puja flowers */
+  --primary-dark: #8B3000;   /* deep vermillion — temple walls, tilak */
 
-  --accent-pink: #EC4899;
-  --accent-orange: #F97316;
-  --accent-gold: #FFD700;
-  --accent-blue: #3B82F6;
+  /* ── Accents ── */
+  --accent-pink: #D4006A;    /* lotus pink — Ganesh's lotus throne */
+  --accent-orange: #E8A000;  /* turmeric yellow — haldi, sacred healing */
+  --accent-gold: #FFB800;    /* divine gold — prosperity, auspiciousness */
+  --accent-blue: #006A6A;    /* peacock teal — Krishna's peacock feather */
 
-  --gold-light: #FDE68A;
-  --orange-light: #FB923C;
+  /* ── Tints ── */
+  --gold-light: #FFE8A0;     /* soft gold — festive warmth */
+  --orange-light: #FFCB80;   /* pale marigold */
 
-  --background: #FFF7ED;
-  --surface: #FFFFFF;
+  /* ── Surfaces ── */
+  --background: #FFF8EE;     /* warm ivory — temple marble / parchment */
+  --surface: #FFFDF5;        /* pure cream — purity */
 
-  --text-primary: #1E1B4B;
-  --text-secondary: #6B7280;
+  /* ── Text ── */
+  --text-primary: #3D0C00;   /* deep maroon — grounded, temple color */
+  --text-secondary: #7A4A30; /* warm brown — earthy, readable */
   --text-on-primary: #FFFFFF;
 
-  --border: #E9D5FF;
-  --success: #22C55E;
-  --danger: #EF4444;
+  /* ── Border ── */
+  --border: #F5D5A0;         /* soft saffron tint — warm, festive */
+
+  /* ── Semantic ── */
+  --success: #1A7A4A;        /* peacock green — nature, Krishna */
+  --danger: #C0170F;         /* deep red — alert */
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans', 'Noto Sans Devanagari', Arial, sans-serif;
   line-height: 1.5;
   background-color: var(--background);
 }

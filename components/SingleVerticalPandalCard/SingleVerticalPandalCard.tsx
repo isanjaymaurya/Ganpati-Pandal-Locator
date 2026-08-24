@@ -1,7 +1,10 @@
 import React from 'react';
 import type { IGanpatiPandal } from '../../types/global';
 import type { FavouritePandal } from '../../store/appSlice';
-import { MapPin, MapPinCheckInside, MapPinPlusInside } from 'lucide-react';
+import { Heart, MapPin } from 'lucide-react';
+import HeartIcon from '../icons/HeartIcon';
+import CrownIcon from '../icons/CrownIcon';
+import { isFamous } from '@/utils/pandal';
 
 interface Props {
   pandal: IGanpatiPandal;
@@ -31,14 +34,21 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
       role="button"
       tabIndex={0}
     >
-      <img  
-        src={pandal?.image_url || 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress'}
-        alt={pandal.name}
-        className='w-14 h-14 rounded-lg object-cover object-top border shadow-sm border-gold-500'
-      />
+      <div className="relative shrink-0">
+        {isFamous(pandal) && (
+          <CrownIcon className="absolute -top-2.5 left-1/2 -translate-x-1/2 drop-shadow-sm" size={11} />
+        )}
+        <img
+          src={pandal.image_url || 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress'}
+          alt={pandal.name}
+          className={`w-12 h-12 rounded-lg object-cover object-top border shadow-sm ${isFamous(pandal) ? 'border-2 border-accent-gold' : 'border-border'}`}
+        />
+      </div>
       <div>
-        <p className="font-semibold text-sm mb-0.5 text-text-primary">{highlightMatch(pandal.name, search)}</p>
-        <p className="text-xs text-text-secondary mb-0.5">{highlightMatch(pandal.location, search)}</p>
+        <p className="font-semibold text-xs mb-0.5 text-text-primary">{highlightMatch(pandal.name, search)}</p>
+        <p className="text-[10px] text-text-secondary mb-0.5">
+          {highlightMatch(pandal.location, search)}
+        </p>
       </div>
       <div className='justify-end flex-1 flex items-center'>
         <button
@@ -58,11 +68,12 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
             e.stopPropagation();
             onToggleFavourite();
           }}
-        >
-          {isFavourite ? <MapPinCheckInside size={20} className='mx-auto' /> : <MapPinPlusInside size={20} className='mx-auto' />}
-          <span className='text-[10px] whitespace-nowrap'>
-            {isFavourite ? 'Favourited' : 'Favourite'}
-          </span>
+        > 
+        {isFavourite ? (
+          <HeartIcon size={20} className="text-red-500 transition-colors duration-150" />
+        ) : (
+          <Heart size={20} />
+        )}
         </button>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import Head from 'next/head';
 
-import BottomNavigation from '@/components/BottomNavigation/BottomNavigation';
 import useIsDesktop from '@/hooks/useIsDesktop';
 import Header from '@/components/Header/Header';
 import DesktopFooter from '@/components/Footer/DesktopFooter';
@@ -31,7 +30,8 @@ const MainLayout = ({
             <main className="container mx-auto">
                 {children}
             </main>
-            {isDesktop ? <DesktopFooter /> : <BottomNavigation />}
+            <DesktopFooter />
+            {/* hidding BottomNavigation bcoz i dont find more pages which need it */}
         </>
     );
 };

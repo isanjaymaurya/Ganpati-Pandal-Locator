@@ -21,68 +21,61 @@ const FEATURES = [
     icon: <Map size={22} />,
     title: 'Interactive Map',
     description: 'Explore all Ganpati pandals on a live map with custom markers for easy identification.',
-    color: 'text-primary-light',
-    bg: 'bg-border',
+    color: 'text-primary-light'
   },
   {
     icon: <Navigation size={22} />,
     title: 'Your Location',
     description: 'Automatically detects your location and centers the map so you can find nearby pandals instantly.',
-    color: 'text-accent-orange',
-    bg: 'bg-orange-light/20',
+    color: 'text-accent-orange'
   },
   {
     icon: <List size={22} />,
     title: 'Pandal Directory',
     description: 'Browse a searchable, filterable list of all pandals with address and visarjan date details.',
-    color: 'text-accent-pink',
-    bg: 'bg-accent-pink/10',
+    color: 'text-accent-pink'
   },
   {
     icon: <Heart size={22} />,
     title: 'Favourites',
     description: 'Save your must-visit pandals to a personal favourites list for quick access anytime.',
     color: 'text-accent-gold',
-    bg: 'bg-gold-light/40',
   },
   {
     icon: <MapPin size={22} />,
     title: 'Detailed Info',
     description: 'View address, how-to-reach directions, and a direct Google Maps link for every pandal.',
-    color: 'text-success',
-    bg: 'bg-success/10',
+    color: 'text-success'
   },
   {
     icon: <Sparkles size={22} />,
     title: 'Community Driven',
     description: 'Pandal data is sourced from the community — anyone can contribute and keep it up to date.',
-    color: 'text-primary',
-    bg: 'bg-primary/10',
+    color: 'text-primary'
   },
 ];
 
 export default function AboutPage() {
   return (
     <MainLayout>
-      <div className="max-w-2xl mx-auto px-4 py-6 pb-24 md:pb-8 flex flex-col gap-6">
-
+      <div className="max-w-2xl mx-auto px-4 py-6 md:pb-8 flex flex-col gap-6">
         {/* ── Hero ── */}
-        <div
-          className="rounded-2xl px-6 py-8 flex flex-col items-center text-center shadow-lg"
-          style={{ 
-            backgroundColor: "#22065C",
-            background: "linear-gradient(180deg, rgb(56, 21, 128) 0%, rgb(33, 12, 101) 50%, rgb(36, 15, 102) 100%)"
-          }}
-        >
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4">
-            <Image src={`${BASE}/ganpati-idol.png`} alt="Ganpati Idol" width={64} height={64} />
+        <div className="rounded-2xl border-2 border-accent-gold bg-surface shadow-md text-center flex flex-col items-center px-6 py-8 gap-3 relative overflow-hidden">
+          {/* decorative gold top strip */}
+          <div className="absolute top-0 left-0 right-0 h-1" />
+          <div className="w-20 h-20 rounded-full border-2 border-accent-gold bg-border/30 flex items-center justify-center shadow-md">
+            <Image src={`${BASE}/ganpati-idol.png`} alt="Ganpati Idol" width={72} height={72} className="object-contain mt-4" />
           </div>
-          <h1 className="text-2xl font-extrabold text-text-on-primary tracking-tight mb-1">
+          <h1 className="text-2xl font-extrabold text-primary-dark tracking-tight">
             Ganpati Pandal Locator
           </h1>
-          <p className="text-border text-sm leading-relaxed max-w-xs">
+          <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
             Your community-powered guide to finding &amp; exploring Ganpati pandals across Mumbai.
           </p>
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-primary border border-primary/30 bg-primary/5 rounded-full px-3 py-1">
+            <Sparkles size={11} className="text-accent-gold" />
+            Ganesh Chaturthi {new Date().getFullYear()}
+          </span>
         </div>
 
         {/* ── About ── */}
@@ -111,7 +104,7 @@ export default function AboutPage() {
                 key={f.title}
                 className="flex items-start gap-3 rounded-xl p-3 border border-border bg-background"
               >
-                <div className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center ${f.bg} ${f.color}`}>
+                <div className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center ${f.color}`}>
                   {f.icon}
                 </div>
                 <div>
@@ -140,6 +133,7 @@ export default function AboutPage() {
             <p className="text-xs text-text-secondary leading-relaxed">
               Fill in the pandal <strong className="text-text-primary">Name</strong>,{' '}
               <strong className="text-text-primary">Latitude &amp; Longitude</strong>,{' '}
+              <strong className="text-text-primary">Nearby Stations</strong>,{' '}
               <strong className="text-text-primary">Google Map Link</strong>. That&apos;s it!
             </p>
           </div>
@@ -156,14 +150,14 @@ export default function AboutPage() {
         </div>
 
         {/* ── GitHub ── */}
-        <div className="rounded-2xl bg-primary-dark px-6 py-5 shadow-sm">
+        <div className="rounded-2xl bg-surface border border-border px-6 py-5 shadow-sm">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-8 h-8 rounded-lg bg-primary-light/30 flex items-center justify-center">
-              <GitBranch size={18} className="text-text-on-primary" />
+              <GitBranch size={18} className="text-primary" />
             </div>
-            <h2 className="text-base font-bold text-text-on-primary">Open Source on GitHub</h2>
+            <h2 className="text-base font-bold text-text-primary">Open Source on GitHub</h2>
           </div>
-          <p className="text-border text-sm leading-relaxed mb-4">
+          <p className="text-text-secondary text-sm leading-relaxed mb-4">
             This project is fully open source. If you find it useful, a ⭐ star on GitHub goes a
             long way in helping others discover it!
           </p>

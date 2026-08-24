@@ -21,7 +21,7 @@ const PandalPopupContent: React.FC<Props> = ({ pandal }) => (
     <hr className="my-2" />
     <div className="flex justify-center">
       <a href={pandal.gmap_link} target="_blank" rel="noopener noreferrer">
-        <button className="bg-primary text-white text-xs font-bold py-1 px-2 rounded">
+        <button className="text-primary border border-primary text-xs font-bold py-1.5 px-3 rounded hover:opacity-90 transition-opacity shadow-sm">
           Google Map
         </button>
       </a>

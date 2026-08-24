@@ -18,12 +18,11 @@ function buildIcon(name: string): L.DivIcon {
     className: '',
         html: `
       <div class="flex flex-col items-center pointer-events-none">
-        <img src="${BASE}/pandal-marker.png" class="w-[50px] h-[50px] object-contain" />
+        <img src="${BASE}/pandal-marker.png" class="w-14 h-14 object-contain" />
         <div class="flex flex-col items-center mt-1 pointer-events-none">
           <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--accent-gold);"></div>
           <div
-            style="background: #421d8c; background: linear-gradient(180deg, rgb(102, 71, 163) 0%, rgb(72, 51, 142) 50%, rgb(67, 47, 131) 100%);"
-            class="bg-primary text-center text-[8px] text-white uppercase rounded-xl border-2 border-accent-gold w-22 shadow-xs px-2 py-1.5 font-semibold pointer-events-none"
+            class="bg-orange-100 text-center text-[8px] text-black uppercase font-bols rounded-xl border-2 border-accent-gold w-22 shadow px-2 py-1.5 pointer-events-none"
           >
             ${name}
           </div>

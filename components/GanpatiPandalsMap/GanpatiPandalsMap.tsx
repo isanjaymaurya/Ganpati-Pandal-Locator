@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -48,10 +48,10 @@ function LocateControl({
           title={userLocation ? 'Go to my location' : 'Find my location'}
           className="rounded-full border border-black bg-white flex items-center justify-center shadow-sm w-8 h-8"
         >
-                    {locating ? (
-            <LocateFixed className="w-6 h-4 animate-spin" />
+          {locating ? (
+            <LocateFixed className="w-4 h-4 animate-spin" />
           ) : (
-            <LocateFixed className="w-6 h-4" />
+            <LocateFixed className="w-4 h-4" />
           )}
         </button>
       </div>
@@ -69,16 +69,14 @@ type Props = {
 
 const DEFAULT_CENTER: [number, number] = [18.9582, 72.8321];
 
-
-
 const userLocationIcon = L.divIcon({
   className: '',
   html: `
     <div class="flex flex-col items-center pointer-events-none">
       <img src="${BASE}/user-location-marker.svg" class="w-10 h-10" />
       <div class="flex flex-col items-center mt-1 pointer-events-none">
-        <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--accent-blue);"></div>
-        <div class="shadow-xs rounded-full bg-blue-800 border-2 border-blue-400 px-2.5 py-1 text-white text-[9px] font-bold tracking-wide whitespace-nowrap pointer-events-none">YOU ARE HERE</div>
+        <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--accent-gold);"></div>
+        <div class="bg-orange-100 text-black shadow-md rounded-full px-2.5 py-1 text-white text-[9px] font-bold tracking-wide whitespace-nowrap border-2 border-accent-gold pointer-events-none">YOU ARE HERE</div>
       </div>
     </div>
   `,
@@ -137,22 +135,23 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal }: Pr
     }
   }, [selectedPandal, ganpatiPandals]);
 
-  return (
-            <MapContainer
+    return (
+    <MapContainer
       center={DEFAULT_CENTER}
       zoom={12}
-      className="h-[500px] w-full"
+      className="h-[300px] md:h-[500px] w-full"
       ref={mapRef}
       zoomControl={false}
     >
       <ZoomControl position="bottomright" />
-      {/* <ZoomLogger /> */}
       <LocateControl
         userLocation={userLocation}
         onLocate={(coords) => setUserLocation(coords)}
       />
+      {/* Voyager — warm, colourful streets; fits the Hindu festive palette */}
       <TileLayer
-        url="https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
       />
 
       {/* User location marker */}

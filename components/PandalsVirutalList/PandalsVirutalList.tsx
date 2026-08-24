@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import type { FavouritePandal } from '../../store/appSlice';
 import { addFavourite, removeFavourite } from '../../store/appSlice';
@@ -37,15 +37,16 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
   }, [ganpatiPandals, search]);
 
     // Filter by favourite
-  const filteredPandals = useMemo(() => {
-    if (favouriteFilter === 'all') return searchedPandals;
-    if (favouriteFilter === 'favourited') return searchedPandals.filter(p => favourites.some((fp: FavouritePandal) => fp.name === p.name));
-    if (favouriteFilter === 'non-favourited') return searchedPandals.filter(p => !favourites.some((fp: FavouritePandal) => fp.name === p.name));
-    return searchedPandals;
+    const filteredPandals = useMemo(() => {
+    if (favouriteFilter === 'favourited')
+      return searchedPandals.filter(p => favourites.some((fp: FavouritePandal) => fp.name === p.name));
+    if (favouriteFilter === 'non-favourited')
+      return searchedPandals.filter(p => !favourites.some((fp: FavouritePandal) => fp.name === p.name));
+    return searchedPandals; // 'all'
   }, [favouriteFilter, searchedPandals, favourites]);
 
-  // Helper to highlight matched text
-  const highlightMatch = (text: string, filter: string) => {
+    // Helper to highlight matched text
+  const highlightMatch = useCallback((text: string, filter: string) => {
     if (!filter) return text;
     const regex = new RegExp(`(${filter})`, 'gi');
     const parts = text.split(regex);
@@ -56,13 +57,13 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
         part
       )
     );
-  };
+  }, []);
 
-  const rowRenderer = ({ index, key, style }: { index: number; key: string; style: React.CSSProperties }) => {
+  const rowRenderer = useCallback(({ index, key, style }: { index: number; key: string; style: React.CSSProperties }) => {
     const pandal = filteredPandals[index];
     const isSelected = selectedIndex === index;
     return (
-      <div key={key} style={style} className='p-1'>
+      <div key={key} style={style} className="p-1">
         <SingleVerticalPandalCard
           pandal={pandal}
           search={search}
@@ -71,9 +72,9 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
           highlightMatch={highlightMatch}
           onSelect={() => {
             setSelectedIndex(index);
-            if (onSelectPandal) onSelectPandal(pandal);
+            onSelectPandal?.(pandal);
           }}
-                              onToggleFavourite={() => {
+          onToggleFavourite={() => {
             if (favourites.some((fp: FavouritePandal) => fp.name === pandal.name)) {
               dispatch(removeFavourite(pandal.name));
             } else {
@@ -83,10 +84,10 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal })
         />
       </div>
     );
-  };
+  }, [filteredPandals, selectedIndex, search, favourites, highlightMatch, dispatch, onSelectPandal]);
 
   return (
-    <div className="flex flex-col h-[500px]">
+    <div className="flex flex-col h-[300px] md:h-[455px] mx-2 md:mx-0">
       <input
         type="text"
         value={search}

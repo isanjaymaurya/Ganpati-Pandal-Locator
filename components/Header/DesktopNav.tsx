@@ -9,16 +9,27 @@ const DesktopNav: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <nav className={className}>
       <ul className="flex gap-4 text-white font-semibold text-lg">
-        {NAV_ITEMS.map(({ href, label }) => {
+        {NAV_ITEMS.map(({ href, label, external }) => {
           const isActive = pathname === href;
           return (
             <li key={href}>
-              <Link
-                href={href}
-                className={`text-xs uppercase transition-colors hover:text-accent-gold ${isActive ? 'text-accent-gold underline underline-offset-4' : ''}`}
-              >
-                {label}
-              </Link>
+              {external ? (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs uppercase transition-colors hover:text-accent-gold"
+                >
+                  {label}
+                </a>
+              ) : (
+                <Link
+                  href={href}
+                  className={`text-xs uppercase transition-colors hover:text-accent-gold ${isActive ? 'text-accent-gold underline underline-offset-4' : ''}`}
+                >
+                  {label}
+                </Link>
+              )}
             </li>
           );
         })}
