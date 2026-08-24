@@ -1,7 +1,7 @@
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import {
-  MapPin,
+  MonitorSmartphone,
   Star,
   Heart,
   List,
@@ -32,7 +32,7 @@ const FEATURES = [
   {
     icon: <List size={22} />,
     title: 'Pandal Directory',
-    description: 'Browse a searchable, filterable list of all pandals with address and visarjan date details.',
+    description: 'Browse a searchable, filterable list of all pandals with Name, Latitude & Longitude, Nearby Stations and Google Map Link / Direction details.',
     color: 'text-accent-pink'
   },
   {
@@ -42,9 +42,9 @@ const FEATURES = [
     color: 'text-accent-gold',
   },
   {
-    icon: <MapPin size={22} />,
-    title: 'Detailed Info',
-    description: 'View address, how-to-reach directions, and a direct Google Maps link for every pandal.',
+    icon: <MonitorSmartphone size={22} />,
+    title: 'Mobile & Desktop Ready',
+    description: 'Fully responsive — works seamlessly on any screen size, from your phone on the go to your desktop at home.',
     color: 'text-success'
   },
   {
