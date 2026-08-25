@@ -79,8 +79,8 @@ export default function AboutPage() {
         </div>
 
         {/* ── About ── */}
-        <div className="rounded-2xl bg-surface border border-border px-6 py-5 shadow-sm">
-          <h2 className="text-base font-bold text-text-primary mb-2 flex items-center gap-2">
+        <div className="card">
+          <h2 className="section-heading">
             <Sparkles size={18} className="text-accent-gold" />
             About the App
           </h2>
@@ -92,19 +92,19 @@ export default function AboutPage() {
           </p>
         </div>
 
-        {/* ── Features ── */}
-        <div className="rounded-2xl bg-surface border border-border px-6 py-5 shadow-sm">
-          <h2 className="text-base font-bold text-text-primary mb-4 flex items-center gap-2">
+                {/* ── Features ── */}
+        <div className="card">
+          <h2 className="section-heading mb-4">
             <List size={18} className="text-primary-light" />
             Features
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {FEATURES.map((f) => (
-              <div
+                            <div
                 key={f.title}
-                className="flex items-start gap-3 rounded-xl p-3 border border-border bg-background"
+                className="card-sm flex items-start gap-3"
               >
-                <div className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center ${f.color}`}>
+                <div className={`icon-box-lg ${f.color}`}>
                   {f.icon}
                 </div>
                 <div>
@@ -116,10 +116,10 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* ── Contribute ── */}
-        <div className="rounded-2xl bg-surface border border-border px-6 py-5 shadow-sm">
+                {/* ── Contribute ── */}
+        <div className="card">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center">
+            <div className="icon-box bg-success/10">
               <FileSpreadsheet size={18} className="text-success" />
             </div>
             <h2 className="text-base font-bold text-text-primary">Contribute Pandal Data</h2>
@@ -128,7 +128,7 @@ export default function AboutPage() {
             Know a pandal that&apos;s missing? Help the community by adding it to our shared Google
             Sheet. Every entry helps thousands of devotees find the right pandal.
           </p>
-          <div className="rounded-xl bg-background border border-border p-4 mb-4 flex items-start gap-3">
+          <div className="card-sm mb-4 flex items-start gap-3">
             <Users size={18} className="text-primary-light shrink-0 mt-0.5" />
             <p className="text-xs text-text-secondary leading-relaxed">
               Fill in the pandal <strong className="text-text-primary">Name</strong>,{' '}
@@ -141,7 +141,7 @@ export default function AboutPage() {
             href="https://docs.google.com/spreadsheets/d/1Z7Dsgv8f0eGSysC6JkOATyBDJODeNd2p8IOiLvPJXlY/edit?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full rounded-xl bg-success text-text-on-primary font-semibold text-sm py-3 px-4 hover:opacity-90 transition-opacity shadow-sm"
+            className="btn-full bg-success text-text-on-primary"
           >
             <FileSpreadsheet size={18} />
             Open Google Sheet
@@ -149,10 +149,10 @@ export default function AboutPage() {
           </a>
         </div>
 
-        {/* ── GitHub ── */}
-        <div className="rounded-2xl bg-surface border border-border px-6 py-5 shadow-sm">
+                {/* ── GitHub ── */}
+        <div className="card">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-primary-light/30 flex items-center justify-center">
+            <div className="icon-box bg-primary-light/30">
               <GitBranch size={18} className="text-primary" />
             </div>
             <h2 className="text-base font-bold text-text-primary">Open Source on GitHub</h2>
@@ -165,7 +165,7 @@ export default function AboutPage() {
             href="https://github.com/isanjaymaurya/Ganpati-Pandal-Locator"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full rounded-xl bg-accent-gold text-text-primary font-semibold text-sm py-3 px-4 hover:opacity-90 transition-opacity shadow-sm"
+            className="btn-full bg-accent-gold text-text-primary"
           >
             <Star size={16} className="fill-text-primary" />
             Star on GitHub

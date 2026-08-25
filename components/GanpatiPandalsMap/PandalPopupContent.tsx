@@ -7,7 +7,7 @@ interface Props {
 
 const PandalPopupContent: React.FC<Props> = ({ pandal }) => (
   <>
-    <div className="flex flex-row items-start gap-2">
+    <div className="flex items-start gap-2">
       <img
         src={pandal.image_url}
         alt={pandal.name}
@@ -19,7 +19,7 @@ const PandalPopupContent: React.FC<Props> = ({ pandal }) => (
       </div>
     </div>
     <hr className="my-2" />
-    <div className="flex justify-center">
+    <div className="flex-center">
       <a href={pandal.gmap_link} target="_blank" rel="noopener noreferrer">
         <button className="text-primary border border-primary text-xs font-bold py-1.5 px-3 rounded hover:opacity-90 transition-opacity shadow-sm">
           Google Map

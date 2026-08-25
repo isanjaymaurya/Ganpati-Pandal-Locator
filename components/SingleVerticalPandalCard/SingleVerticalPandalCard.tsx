@@ -12,6 +12,7 @@ interface Props {
   isSelected?: boolean;
   favourites: FavouritePandal[];
   highlightMatch: (text: string, filter: string) => React.ReactNode;
+  distance?: string | null;
   onSelect?: () => void;
   onToggleFavourite: () => void;
 }
@@ -22,6 +23,7 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
   isSelected,
   favourites,
   highlightMatch,
+  distance,
   onSelect,
   onToggleFavourite
 }) => {
@@ -46,11 +48,16 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
       </div>
       <div>
         <p className="font-semibold text-xs mb-0.5 text-text-primary">{highlightMatch(pandal.name, search)}</p>
-        <p className="text-[10px] text-text-secondary mb-0.5">
-          {highlightMatch(pandal.location, search)}
+                <p className="text-[10px] text-text-secondary mb-0.5 flex items-center gap-1 flex-wrap">
+          <span>{highlightMatch(pandal.location, search)}</span>
+          {distance && (
+            <span className="text-primary font-semibold whitespace-nowrap">
+              · {distance}
+            </span>
+          )}
         </p>
       </div>
-      <div className='justify-end flex-1 flex items-center'>
+      <div className='flex items-center justify-end flex-1'>
         <button
           className={`px-2 transition-colors outline-none ${isSelected ? 'text-primary' : 'text-text-secondary'} hover:text-primary-light`}
           tabIndex={0}

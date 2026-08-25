@@ -1,50 +1,25 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { Search, X } from 'lucide-react';
-import Papa from 'papaparse';
-import axios from 'axios';
 import type { IGanpatiPandal } from '@/types/global';
 import { useAppDispatch } from '@/store/hooks';
 import { setSearchSelectedPandal } from '@/store/appSlice';
 import CrownIcon from '@/components/icons/CrownIcon';
-import { CSV_URL } from '@/constants/env';
 import { isFamous } from '@/utils/pandal';
-
-// Wraps matched substring in a gold <mark> span
-function highlight(text: string, query: string): React.ReactNode {
-  if (!query.trim()) return text;
-  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-  const parts = text.split(regex);
-  return parts.map((part, i) =>
-    regex.test(part) ? (
-      <mark key={i} className="bg-accent-gold/30 text-primary-dark font-bold rounded-sm">
-        {part}
-      </mark>
-    ) : part
-  );
-}
+import { highlight } from '@/utils/highlight';
+import { usePandals } from '@/hooks/usePandals';
 
 const DesktopSearchBar: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const [query, setQuery] = useState('');
-  const [pandals, setPandals] = useState<IGanpatiPandal[]>([]);
   const [open, setOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch pandal list once on mount
-  useEffect(() => {
-    axios.get(CSV_URL, { responseType: 'text' }).then((res) => {
-      const { data } = Papa.parse<IGanpatiPandal>(res.data as string, {
-        header: true,
-        skipEmptyLines: true,
-      });
-      setPandals(data);
-    });
-  }, []);
+  const { pandals } = usePandals();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -98,7 +73,7 @@ const DesktopSearchBar: React.FC = () => {
   return (
     <div ref={containerRef} className="relative w-72 xl:w-96">
       {/* Input */}
-      <div className="flex items-center gap-2 bg-white/15 border border-white/30 rounded-full px-3 py-1.5 backdrop-blur-sm">
+      <div className="flex items-center gap-2 rounded-full px-3 py-1.5 bg-white/15 border border-white/30 backdrop-blur-sm">
         <Search size={14} className="text-white/70 shrink-0" />
         <input
           ref={inputRef}

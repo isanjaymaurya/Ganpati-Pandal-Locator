@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import { store } from '../store';
 import NextNProgress from 'nextjs-progressbar';
+import { Toaster } from 'react-hot-toast';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -16,6 +17,16 @@ function MyApp({ Component, pageProps }: AppProps) {
         options={{ easing: 'ease', speed: 500 }}
       />
       <Component {...pageProps} />
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            fontSize: '13px',
+            borderRadius: '999px',
+            padding: '10px 16px',
+          },
+        }}
+      />
     </Provider>
   );
 }
