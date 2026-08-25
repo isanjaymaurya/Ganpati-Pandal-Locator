@@ -9,6 +9,7 @@ interface Props {
   pandal: IGanpatiPandal;
   markerKey: string | number;
   markerRef?: (el: L.Marker | null) => void;
+  userLocation?: [number, number] | null;
 }
 
 // Build a DivIcon that stacks the marker image + name label in one element.
@@ -37,7 +38,7 @@ function buildIcon(name: string): L.DivIcon {
 
 const MAX_ZOOM = 18;
 
-const PandalMarker: React.FC<Props> = ({ pandal, markerKey, markerRef }) => {
+const PandalMarker: React.FC<Props> = ({ pandal, markerKey, markerRef, userLocation }) => {
   const lat = parseFloat(pandal.latitude);
   const lng = parseFloat(pandal.longitude);
   const icon = useMemo(() => buildIcon(pandal.name), [pandal.name]);
@@ -56,7 +57,7 @@ const PandalMarker: React.FC<Props> = ({ pandal, markerKey, markerRef }) => {
       eventHandlers={{ click: handleClick }}
     >
       <Popup>
-        <PandalPopupContent pandal={pandal} />
+        <PandalPopupContent pandal={pandal} userLocation={userLocation} />
       </Popup>
     </Marker>
   );

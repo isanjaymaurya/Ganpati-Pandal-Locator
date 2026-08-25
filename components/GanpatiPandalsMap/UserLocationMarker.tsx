@@ -2,6 +2,7 @@ import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { BASE } from '@/constants/env';
+import { MapPin } from 'lucide-react';
 
 const userLocationIcon = L.divIcon({
   className: '',
@@ -26,7 +27,9 @@ interface Props {
 const UserLocationMarker: React.FC<Props> = ({ position }) => (
   <Marker position={position} icon={userLocationIcon}>
     <Popup>
-      <p className="text-sm font-semibold mb-0">📍 Your Location</p>
+      <p className="text-sm font-semibold mb-0 flex items-center gap-1">
+        <MapPin size={14} className="shrink-0" /> Your Location
+      </p>
     </Popup>
   </Marker>
 );

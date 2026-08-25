@@ -106,7 +106,7 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal, u
   );
 
   return (
-    <div className="flex flex-col h-[300px] md:h-[455px] mx-2 md:mx-0">
+    <div className="flex flex-col h-[300px] md:h-[480px] mx-2 md:mx-0 my-2 md:my-0">
       <PandalListFilters
         search={search}
         onSearchChange={(v) => { setSearch(v); setSelectedIndex(null); }}

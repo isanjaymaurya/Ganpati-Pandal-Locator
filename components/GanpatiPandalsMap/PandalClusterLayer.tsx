@@ -8,9 +8,10 @@ interface Props {
   pandals: IGanpatiPandal[];
   selectedPandal?: IGanpatiPandal | null;
   popupIdx: number | null;
+  userLocation?: [number, number] | null;
 }
 
-const PandalClusterLayer: React.FC<Props> = ({ pandals, selectedPandal, popupIdx }) => (
+const PandalClusterLayer: React.FC<Props> = ({ pandals, selectedPandal, popupIdx, userLocation }) => (
   <>
     {/* Selected pandal — rendered outside the cluster so it stays visible at any zoom */}
     {pandals.map((pandal, idx) => {
@@ -23,10 +24,11 @@ const PandalClusterLayer: React.FC<Props> = ({ pandals, selectedPandal, popupIdx
         pandal.location === selectedPandal.location;
       if (!isSelected) return null;
       return (
-        <PandalMarker
+                <PandalMarker
           key={`selected-${idx}`}
           pandal={pandal}
           markerKey={`selected-${idx}`}
+          userLocation={userLocation}
           markerRef={(el) => {
             if (el && popupIdx === idx) el.openPopup();
           }}
@@ -45,7 +47,7 @@ const PandalClusterLayer: React.FC<Props> = ({ pandals, selectedPandal, popupIdx
           pandal.name === selectedPandal.name &&
           pandal.location === selectedPandal.location;
         if (isSelected) return null;
-        return <PandalMarker key={idx} pandal={pandal} markerKey={idx} />;
+        return <PandalMarker key={idx} pandal={pandal} markerKey={idx} userLocation={userLocation} />;
       })}
     </MarkerClusterGroup>
   </>

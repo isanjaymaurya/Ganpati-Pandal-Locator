@@ -63,11 +63,12 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal, onLo
       />
 
       {userLocation && <UserLocationMarker position={userLocation} />}
-
+      
       <PandalClusterLayer
         pandals={ganpatiPandals}
         selectedPandal={selectedPandal}
         popupIdx={popupIdx}
+        userLocation={userLocation}
       />
     </MapContainer>
   );

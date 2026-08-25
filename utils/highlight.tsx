@@ -11,7 +11,7 @@ export function highlight(text: string, query: string): React.ReactNode {
   const parts = text.split(regex);
   return parts.map((part, i) =>
     regex.test(part) ? (
-      <mark key={i} className="bg-accent-gold/30 text-primary-dark font-bold rounded-sm">
+      <mark key={i} className="bg-accent-gold text-primary-dark font-bold rounded-sm">
         {part}
       </mark>
     ) : (
@@ -25,12 +25,14 @@ export function highlight(text: string, query: string): React.ReactNode {
  * Used in the pandal list cards.
  */
 export function highlightMatch(text: string, filter: string): React.ReactNode {
-  if (!filter) return text;
-  const regex = new RegExp(`(${filter})`, 'gi');
-  const parts = text.split(regex);
+  const normalised = text.toLowerCase();
+  if (!filter) return normalised;
+  const escaped = filter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escaped})`, 'gi');
+  const parts = normalised.split(regex);
   return parts.map((part, i) =>
     regex.test(part) ? (
-      <span key={i} className="bg-gold-light text-text-primary">
+      <span key={i} className="bg-accent-gold text-primary-dark">
         {part}
       </span>
     ) : (

@@ -41,7 +41,7 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
             : 'Location request timed out. Please try again.';
         toast.error(message, { id: toastId, duration: 4000 });
       },
-      { enableHighAccuracy: true, timeout: 8000 },
+      { enableHighAccuracy: true, timeout: 15000 },
     );
   };
 
