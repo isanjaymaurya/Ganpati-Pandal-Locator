@@ -56,10 +56,12 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal, onLo
       <ZoomControl position="bottomright" />
       <LocateControl userLocation={userLocation} onLocate={handleLocate} />
 
-      {/* Voyager tiles — warm, colourful streets matching the festive palette */}
+      {/* CARTO Voyager (100% authentic) when API key is set,
+          Stadia Alidade Smooth as a free no-key fallback */}
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+        maxZoom={20}
       />
 
       {userLocation && <UserLocationMarker position={userLocation} />}
