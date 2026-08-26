@@ -44,15 +44,16 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
           src={pandal.image_url || 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress'}
           alt={pandal.name}
           className={`w-12 h-12 rounded-lg object-cover object-top border shadow-sm ${isFamous(pandal) ? 'border-2 border-accent-gold' : 'border-border'}`}
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress';
+            e.currentTarget.onerror = null;
+          }}
         />
       </div>
       <div>
-        <p className="font-semibold text-xs mb-0.5 text-text-primary uppercase">{highlightMatch(pandal.name, search)}</p>
-          <p className="text-[9px] text-text-secondary mb-0.5 flex items-center gap-1 flex-wrap">
-          <span className="capitalize">{highlightMatch(pandal.location, search)}</span>
-          {pandal.station_name && pandal.station_name.toLowerCase() !== pandal.location?.toLowerCase() && (
-            <span className="capitalize">· {highlightMatch(pandal.station_name, search)}</span>
-          )}
+        <p className="font-semibold text-xs mb-0.5 text-text-primary uppercase flex-wrap line-clamp-1">{highlightMatch(pandal.name, search)}</p>
+        <p className="text-[10px] text-text-secondary mb-0.5 flex items-center gap-1 flex-wrap line-clamp-2 capitalize">
+          <span title={pandal.location}>{highlightMatch(pandal.location, search)}</span>
           {distance && (
             <span className="text-primary font-semibold whitespace-nowrap">
               · {distance}

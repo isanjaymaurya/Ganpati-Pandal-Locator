@@ -18,10 +18,12 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
       return;
     }
     if (!navigator.geolocation) {
+      toast.dismiss(); 
       toast.error('Geolocation is not supported by your browser.');
       return;
     }
     setLocating(true);
+    toast.dismiss(); 
     const toastId = toast.loading('Finding your location…');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -29,6 +31,7 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
         onLocate(coords);
         map.setView(coords, 15, { animate: true });
         setLocating(false);
+        toast.dismiss(); 
         toast.success('Location found!', { id: toastId });
       },
       (err) => {
@@ -39,6 +42,7 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
             : err.code === err.POSITION_UNAVAILABLE
             ? 'Your location is currently unavailable. Please try again.'
             : 'Location request timed out. Please try again.';
+        toast.dismiss();
         toast.error(message, { id: toastId, duration: 4000 });
       },
       { enableHighAccuracy: true, timeout: 15000 },
@@ -52,6 +56,7 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
           onClick={handleClick}
           title={userLocation ? 'Go to my location' : 'Find my location'}
           className="flex-center rounded-full border border-black bg-white shadow-sm w-8 h-8"
+          disabled={locating}
         >
           <LocateFixed className={`w-4 h-4 ${locating ? 'animate-spin' : ''}`} />
         </button>

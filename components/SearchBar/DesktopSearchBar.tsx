@@ -39,8 +39,7 @@ const DesktopSearchBar: React.FC = () => {
       .filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
-          p.location.toLowerCase().includes(q) ||
-          p.station_name?.toLowerCase().includes(q)
+          p.location.toLowerCase().includes(q)
       )
       .slice(0, 8);
   }, [query, pandals]);
@@ -122,15 +121,16 @@ const DesktopSearchBar: React.FC = () => {
                     className={`w-9 h-9 rounded-lg object-cover object-top border ${
                       isFamous(pandal) ? 'border-accent-gold border-2' : 'border-border'
                     }`}
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress';
+                      e.currentTarget.onerror = null;
+                    }}
                   />
                 </div>
                 {/* Text */}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-text-primary truncate">{highlight(pandal.name, query)}</p>
                   <p className="text-[10px] text-text-secondary truncate">{highlight(pandal.location, query)}</p>
-                  {pandal.station_name && (
-                    <p className="text-[10px] text-primary truncate">🚇 {highlight(pandal.station_name, query)}</p>
-                  )}
                 </div>
                 {isFamous(pandal) && (
                   <span className="text-[9px] font-bold text-accent-gold border border-accent-gold rounded-full px-1.5 py-0.5 shrink-0">

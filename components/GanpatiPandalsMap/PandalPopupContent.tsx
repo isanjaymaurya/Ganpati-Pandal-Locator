@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin } from 'lucide-react';
+import { MapPin, MapPinHouse, Navigation } from 'lucide-react';
 import type { IGanpatiPandal } from '../../types/global';
 import { getDistanceKm, formatDistance, isValidCoord } from '@/utils/geo';
 
@@ -21,23 +21,22 @@ const PandalPopupContent: React.FC<Props> = ({ pandal, userLocation }) => {
   <>
     <div className="flex items-start gap-2">
       <img
-        src={pandal.image_url}
+        src={pandal.image_url || 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress'}
         alt={pandal.name}
         className="h-12 w-12 object-cover object-top rounded shrink-0"
+        onError={(e) => {
+          e.currentTarget.src = 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress';
+          e.currentTarget.onerror = null;
+        }}
       />
       <div>
-        <h1 className="text-[10px] font-bold mb-1 text-primary">{pandal.name}</h1>
-        {pandal.station_name && pandal.station_name.toLowerCase() !== pandal.location?.toLowerCase() && (
-          <p className="text-[9px] capitalize">
-            <strong>Nearest Station:</strong> {pandal.station_name.toLowerCase()}
-          </p>
-        )}
-        <p className="text-[9px] capitalize">
-          <strong>Location:</strong> {pandal.location.toLowerCase()}
+        <h1 className="text-[10px] font-bold mb-1 text-primary uppercase">{pandal.name}</h1>
+        <p className="text-[9px] capitalize flex gap-0.5">
+          <MapPinHouse size={10} className="shrink-0" /> {pandal.location.toLowerCase()}
         </p>
         {distance && (
           <p className="text-[9px] font-semibold text-primary flex items-center gap-0.5">
-            <MapPin size={10} className="shrink-0" />
+            <Navigation size={10} className="shrink-0" />
             {distance} away
           </p>
         )}

@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       />
       <Component {...pageProps} />
       <Toaster
-        position="bottom-center"
+        position="top-center"
         toastOptions={{
           style: {
             fontSize: '13px',
