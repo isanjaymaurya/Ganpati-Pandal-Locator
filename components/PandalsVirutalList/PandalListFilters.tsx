@@ -24,7 +24,7 @@ const PandalListFilters: React.FC<Props> = ({
   onFilterChange,
 }) => (
   <>
-    <div className="relative mb-2">
+    <div className="relative mb-2 hidden md:block">
       <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none shrink-0" />
       <input
         type="text"

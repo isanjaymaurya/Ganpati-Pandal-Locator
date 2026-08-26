@@ -14,10 +14,9 @@ const Header: React.FC<HeaderProps> = ({ isDesktop }) => {
   return (
     <header
       className="sticky top-0 z-[9999] shadow-md w-full flex items-center justify-between h-14"
-      style={{ 
-        backgroundColor: "#22065C",
-        background: "linear-gradient(90deg, rgba(34, 6, 92, 1) 0%, rgba(18, 3, 66, 1) 50%, rgba(19, 3, 70, 1) 100%)"
-       }}
+      style={{
+        background: 'linear-gradient(135deg, #a23217 0%, #b44024 40%, #c54628 70%, #C45000 100%)'
+      }}
       >
       <div className="flex items-center justify-between w-full">
         <Link href="/" className="flex items-center hover:text-purple-300 transition-colors ml-3 gap-2">

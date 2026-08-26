@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import type { IGanpatiPandal } from '@/types/global';
+import { MOBILE_BREAKPOINT, MOBILE_MAP_OFFSET_FRACTION } from '@/utils/geo';
 import PandalPopupContent from './PandalPopupContent';
 import { BASE } from '@/constants/env';
 
@@ -45,7 +46,16 @@ const PandalMarker: React.FC<Props> = ({ pandal, markerKey, markerRef, userLocat
   const map = useMap();
 
   const handleClick = () => {
-    map.flyTo([lat, lng], MAX_ZOOM, { animate: true, duration: 0.8 });
+        const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+
+    if (isMobile) {
+      const mapSize = map.getSize();
+      const targetPoint = map.project([lat, lng], MAX_ZOOM);
+      const adjustedPoint = targetPoint.subtract([0, mapSize.y * MOBILE_MAP_OFFSET_FRACTION]);
+      map.flyTo(map.unproject(adjustedPoint, MAX_ZOOM), MAX_ZOOM, { animate: true, duration: 0.8 });
+    } else {
+      map.flyTo([lat, lng], MAX_ZOOM, { animate: true, duration: 0.8 });
+    }
   };
 
   return (

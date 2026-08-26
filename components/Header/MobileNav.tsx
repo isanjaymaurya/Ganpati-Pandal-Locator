@@ -71,7 +71,7 @@ const MobileNav: React.FC = () => {
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[10000]"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[10010]"
           aria-hidden="true"
         />
       )}
@@ -79,12 +79,12 @@ const MobileNav: React.FC = () => {
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 right-0 h-full w-72 z-[10001] flex flex-col shadow-2xl transition-transform duration-300 ease-in-out bg-orange-50 ${
+        className={`fixed top-0 right-0 h-full w-72 z-[10011] flex flex-col shadow-2xl transition-transform duration-300 ease-in-out bg-orange-50 ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Header */}
-        <div className="flex-between px-5 py-4 border-b border-accent-gold">
+        <div className="flex-between px-5 py-4 border-b border-primary">
           <span className="font-bold text-sm tracking-wide uppercase">Menu</span>
           <button
             onClick={() => setOpen(false)}
@@ -142,7 +142,7 @@ const MobileNav: React.FC = () => {
         </nav>
 
         {/* Footer */}
-        <div className="px-5 py-4 border-t border-accent-gold text-center text-[10px] text-accent-gold uppercase tracking-widest">
+        <div className="px-5 py-4 border-t border-primary text-center text-[10px] text-primary uppercase tracking-widest">
           Ganpati Pandal Locator
         </div>
       </div>

@@ -25,3 +25,12 @@ export function formatDistance(km: number): string {
 export function isValidCoord(lat: number, lng: number): boolean {
   return isFinite(lat) && isFinite(lng) && lat !== 0 && lng !== 0;
 }
+
+/** Breakpoint (px) below which the layout is considered mobile. */
+export const MOBILE_BREAKPOINT = 768;
+
+/**
+ * Fraction of map height to shift the fly-to target upward on mobile.
+ * Keeps the marker near the bottom-center so the popup is fully visible.
+ */
+export const MOBILE_MAP_OFFSET_FRACTION = 0.32;

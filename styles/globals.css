@@ -35,7 +35,7 @@
     @apply hover:bg-black/10 border-transparent;
   }
   .nav-item-active {
-    @apply bg-white/20 text-accent-gold border-accent-gold;
+    @apply bg-white/20 text-primary border-primary;
   }
 
   /* ── Full-width CTA button ── */
@@ -131,7 +131,7 @@ button {
 }
 
 .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out {
-  font-size: 20px !important;
+  font-size: 18px !important;
   line-height: 27px !important;
 }
 
@@ -139,8 +139,40 @@ button {
   width: 28px !important;
   height: 28px !important;
   border-radius: 9999px !important;
+  border: 1px solid #000 !important;
 }
 
 .leaflet-touch .leaflet-bar a:first-child {
     margin-bottom: 6px;
+}
+
+/* ── Map tile — light amber filter ───────────────────────────────────────────────────── */
+.leaflet-tile-pane .leaflet-tile {
+  filter: sepia(0.28) saturate(1) brightness(1) hue-rotate(-6deg);
+}
+
+/* ── Responsive panel heights ────────────────────────────────────────────────── */
+/*
+ * Header is h-14 = 3.5rem.
+ * On desktop (md+) both panels fill the remaining viewport height
+ * using dvh (dynamic viewport height) so mobile browser chrome
+ * appearing / disappearing doesn’t cause layout jumps.
+ * On mobile each panel gets a comfortable fixed portion.
+ */
+.map-panel-height {
+  /* mobile: bigger map so the search bar + map fill the screen well */
+  height: 58dvh;
+}
+
+.list-panel-height {
+  /* mobile: list below the map */
+  height: 42dvh;
+}
+
+@media (min-width: 768px) {
+  .map-panel-height,
+  .list-panel-height {
+    /* desktop: full viewport minus sticky header */
+    height: calc(100dvh - 8rem);
+  }
 }

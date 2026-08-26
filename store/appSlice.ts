@@ -29,15 +29,12 @@ const appSlice = createSlice({
     removeFavourite: (state, action: PayloadAction<string>) => {
       state.favourites = state.favourites.filter(p => p.name !== action.payload);
     },
-        setFavourites: (state, action: PayloadAction<FavouritePandal[]>) => {
-      state.favourites = action.payload;
-    },
     setSearchSelectedPandal: (state, action: PayloadAction<IGanpatiPandal | null>) => {
       state.searchSelectedPandal = action.payload;
     },
   },
 });
 
-export const { addFavourite, removeFavourite, setFavourites, setSearchSelectedPandal } = appSlice.actions;
+export const { addFavourite, removeFavourite, setSearchSelectedPandal } = appSlice.actions;
 export default appSlice.reducer;
 

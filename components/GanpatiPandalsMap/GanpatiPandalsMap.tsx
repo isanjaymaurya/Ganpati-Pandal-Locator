@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import 'react-leaflet-markercluster/styles';
 
 import type { IGanpatiPandal } from '@/types/global';
-import { isValidCoord } from '@/utils/geo';
+import { isValidCoord, MOBILE_BREAKPOINT, MOBILE_MAP_OFFSET_FRACTION } from '@/utils/geo';
 import LocateControl from './LocateControl';
 import UserLocationMarker from './UserLocationMarker';
 import PandalClusterLayer from './PandalClusterLayer';
@@ -15,7 +15,6 @@ const DEFAULT_CENTER: [number, number] = [18.9582, 72.8321];
 type Props = {
   ganpatiPandals: IGanpatiPandal[];
   selectedPandal?: IGanpatiPandal | null;
-  zoomToMax?: boolean;
   onLocate?: (coords: [number, number]) => void;
 };
 
@@ -29,13 +28,26 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal, onLo
     onLocate?.(coords);
   };
 
-  // Fly to selected pandal whenever it changes
+    // Fly to selected pandal whenever it changes
   useEffect(() => {
     if (selectedPandal && mapRef.current) {
       const lat = parseFloat(selectedPandal.latitude);
       const lng = parseFloat(selectedPandal.longitude);
       if (!isValidCoord(lat, lng)) return;
-      mapRef.current.flyTo([lat, lng], 18, { animate: true, duration: 0.8 });
+
+            const map = mapRef.current;
+      const targetZoom = 18;
+      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+
+      if (isMobile) {
+        const mapSize = map.getSize();
+        const targetPoint = map.project([lat, lng], targetZoom);
+        const adjustedPoint = targetPoint.subtract([0, mapSize.y * MOBILE_MAP_OFFSET_FRACTION]);
+        map.flyTo(map.unproject(adjustedPoint, targetZoom), targetZoom, { animate: true, duration: 0.8 });
+      } else {
+        map.flyTo([lat, lng], targetZoom, { animate: true, duration: 0.8 });
+      }
+
       const idx = ganpatiPandals.findIndex(
         (p) => p.name === selectedPandal.name && p.location === selectedPandal.location,
       );
@@ -45,33 +57,30 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal, onLo
     }
   }, [selectedPandal, ganpatiPandals]);
 
-  return (
-    <MapContainer
-      center={DEFAULT_CENTER}
-      zoom={12}
-      className="h-[300px] md:h-[500px] w-full"
-      ref={mapRef}
-      zoomControl={false}
-    >
-      <ZoomControl position="bottomright" />
-      <LocateControl userLocation={userLocation} onLocate={handleLocate} />
-
-      {/* CARTO Voyager (100% authentic) when API key is set,
-          Stadia Alidade Smooth as a free no-key fallback */}
-      <TileLayer
-        url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
-        maxZoom={20}
-      />
-
-      {userLocation && <UserLocationMarker position={userLocation} />}
-      
-      <PandalClusterLayer
-        pandals={ganpatiPandals}
-        selectedPandal={selectedPandal}
-        popupIdx={popupIdx}
-        userLocation={userLocation}
-      />
-    </MapContainer>
+      return (
+    <div className="relative">
+      <MapContainer
+        center={DEFAULT_CENTER}
+        zoom={12}
+        className="map-panel-height w-full"
+        ref={mapRef}
+        zoomControl={false}
+      >
+        <ZoomControl position="bottomright" />
+        <LocateControl userLocation={userLocation} onLocate={handleLocate} />
+        <TileLayer
+          url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+          maxZoom={20}
+        />
+        {userLocation && <UserLocationMarker position={userLocation} />}
+        <PandalClusterLayer
+          pandals={ganpatiPandals}
+          selectedPandal={selectedPandal}
+          popupIdx={popupIdx}
+          userLocation={userLocation}
+        />
+      </MapContainer>
+    </div>
   );
 }

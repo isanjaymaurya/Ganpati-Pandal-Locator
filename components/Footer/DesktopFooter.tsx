@@ -5,7 +5,7 @@ import {
 
 export default function DesktopFooter() {
   return (
-    <footer className="text-text-on-primary py-4 border-t border-gray-200">
+    <footer className="text-text-on-primary py-3 md:py-4 border-t border-gray-200 mx-4 md:mx-0">
         {/* ── Footer note ── */}
         <p className="text-center text-xs text-text-secondary">
           Made with{' '}
