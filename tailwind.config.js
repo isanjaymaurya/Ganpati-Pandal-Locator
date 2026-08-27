@@ -28,4 +28,8 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    'h-[85dvh]',
+    'min-h-[85dvh]',
+  ],
 }

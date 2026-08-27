@@ -11,46 +11,41 @@ interface Props {
   userLocation?: [number, number] | null;
 }
 
-const PandalClusterLayer: React.FC<Props> = ({ pandals, selectedPandal, popupIdx, userLocation }) => (
-  <>
-    {/* Selected pandal — rendered outside the cluster so it stays visible at any zoom */}
-    {pandals.map((pandal, idx) => {
-      const lat = parseFloat(pandal.latitude);
-      const lng = parseFloat(pandal.longitude);
-      if (!isValidCoord(lat, lng)) return null;
-      const isSelected =
-        selectedPandal &&
-        pandal.name === selectedPandal.name &&
-        pandal.location === selectedPandal.location;
-      if (!isSelected) return null;
-      return (
-                <PandalMarker
-          key={`selected-${idx}`}
-          pandal={pandal}
-          markerKey={`selected-${idx}`}
-          userLocation={userLocation}
-          markerRef={(el) => {
-            if (el && popupIdx === idx) el.openPopup();
-          }}
-        />
-      );
-    })}
+/** Returns true when pandal matches the selected one. */
+const isMatch = (pandal: IGanpatiPandal, selected: IGanpatiPandal | null | undefined) =>
+  !!selected && pandal.name === selected.name && pandal.location === selected.location;
 
-    {/* All other pandals — clustered */}
-    <MarkerClusterGroup chunkedLoading>
-      {pandals.map((pandal, idx) => {
-        const lat = parseFloat(pandal.latitude);
-        const lng = parseFloat(pandal.longitude);
-        if (!isValidCoord(lat, lng)) return null;
-        const isSelected =
-          selectedPandal &&
-          pandal.name === selectedPandal.name &&
-          pandal.location === selectedPandal.location;
-        if (isSelected) return null;
-        return <PandalMarker key={idx} pandal={pandal} markerKey={idx} userLocation={userLocation} />;
+const PandalClusterLayer: React.FC<Props> = ({ pandals, selectedPandal, popupIdx, userLocation }) => {
+  // Pre-filter valid coords once
+  const validPandals = pandals.filter((p) =>
+    isValidCoord(parseFloat(p.latitude), parseFloat(p.longitude))
+  );
+
+  return (
+    <>
+      {/* Selected pandal — rendered outside the cluster so it stays visible at any zoom */}
+      {validPandals.map((pandal, idx) => {
+        if (!isMatch(pandal, selectedPandal)) return null;
+        return (
+          <PandalMarker
+            key={`selected-${idx}`}
+            pandal={pandal}
+            markerKey={`selected-${idx}`}
+            userLocation={userLocation}
+            markerRef={(el) => { if (el && popupIdx === idx) el.openPopup(); }}
+          />
+        );
       })}
-    </MarkerClusterGroup>
-  </>
-);
+
+      {/* All other pandals — clustered */}
+      <MarkerClusterGroup chunkedLoading>
+        {validPandals.map((pandal, idx) => {
+          if (isMatch(pandal, selectedPandal)) return null;
+          return <PandalMarker key={idx} pandal={pandal} markerKey={idx} userLocation={userLocation} />;
+        })}
+      </MarkerClusterGroup>
+    </>
+  );
+};
 
 export default PandalClusterLayer;

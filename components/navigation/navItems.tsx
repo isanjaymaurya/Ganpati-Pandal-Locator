@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, List, Heart, Info } from 'lucide-react';
+import { MapPin, List, Info, Github } from 'lucide-react';
 
 export interface NavItem {
   href: string;
@@ -22,8 +22,14 @@ export const NAV_ITEMS: NavItem[] = [
     external: true,
   },
   {
+    href: 'https://github.com/isanjaymaurya/Ganpati-Pandal-Locator',
+    label: 'GitHub Repo',
+    icon: <Github size={ICON_SIZE} strokeWidth={1.8} />,
+    external: true,
+  },
+  {
     href: '/about',
     label: 'About',
     icon: <Info size={ICON_SIZE} strokeWidth={1.8} />,
-  },
+  }
 ];

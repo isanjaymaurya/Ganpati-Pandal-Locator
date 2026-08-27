@@ -28,7 +28,6 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
   onToggleFavourite
 }) => {
   const isFavourite = favourites.some((fp: FavouritePandal) => fp.name === pandal.name);
-
   return (
     <div
       className={`border border-border px-3 py-2 flex gap-2 items-center bg-surface rounded-xl cursor-pointer ${isSelected ? 'ring-2 ring-primary' : ''}`}

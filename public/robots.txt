@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/sitemap.xml

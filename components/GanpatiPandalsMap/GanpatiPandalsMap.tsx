@@ -57,7 +57,7 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal, onLo
     }
   }, [selectedPandal, ganpatiPandals]);
 
-      return (
+  return (
     <div className="relative">
       <MapContainer
         center={DEFAULT_CENTER}
@@ -69,9 +69,10 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal, onLo
         <ZoomControl position="bottomright" />
         <LocateControl userLocation={userLocation} onLocate={handleLocate} />
         <TileLayer
-          url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
-          maxZoom={20}
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+          subdomains={['a', 'b', 'c']}
+          maxZoom={19}
         />
         {userLocation && <UserLocationMarker position={userLocation} />}
         <PandalClusterLayer

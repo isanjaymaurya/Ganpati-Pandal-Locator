@@ -9,6 +9,7 @@ export default function NotFoundPage() {
     <MainLayout
       title="Page Not Found | Ganpati Pandal Locator"
       description="The page you are looking for does not exist. Head back to the Ganpati Pandal Locator to explore pandals near you."
+      noIndex
     >
       <div className="max-w-md mx-auto px-4 py-12 md:pb-12 flex flex-col items-center gap-6 text-center">
 

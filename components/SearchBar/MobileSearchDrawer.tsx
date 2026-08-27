@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
 import { useRouter } from 'next/router';
-import { useAppDispatch } from '@/store/hooks';
-import { setSearchSelectedPandal } from '@/store/appSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { setSearchSelectedPandal, addFavourite, removeFavourite } from '@/store/appSlice';
+import type { FavouritePandal } from '@/store/appSlice';
 import type { IGanpatiPandal } from '@/types/global';
 import { isFamous } from '@/utils/pandal';
-import { highlight } from '@/utils/highlight';
+import { highlightMatch } from '@/utils/highlight';
 import { getDistanceKm, formatDistance, isValidCoord } from '@/utils/geo';
 import { usePandals } from '@/hooks/usePandals';
-import CrownIcon from '@/components/icons/CrownIcon';
-
-const FALLBACK_IMG = 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress';
+import SingleVerticalPandalCard from '@/components/SingleVerticalPandalCard/SingleVerticalPandalCard';
 
 interface Props {
   userLocation?: [number, number] | null;
@@ -19,11 +18,15 @@ interface Props {
 const MobileSearchDrawer: React.FC<Props> = ({ userLocation }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const favourites = useAppSelector((state) => state.favourites.favourites);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const { pandals } = usePandals();
+
+    const closeDrawer = useCallback(() => { setOpen(false); setQuery(''); setSelectedIndex(null); }, []);
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 120);
@@ -33,7 +36,7 @@ const MobileSearchDrawer: React.FC<Props> = ({ userLocation }) => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') closeDrawer(); };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, []);
+  }, [closeDrawer]);
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -73,12 +76,19 @@ const MobileSearchDrawer: React.FC<Props> = ({ userLocation }) => {
       .map((pandal) => ({ pandal, distance: null as string | null }));
   }, [query, pandals, userLocation]);
 
-  const closeDrawer = () => { setOpen(false); setQuery(''); };
-
-  const handleSelect = (pandal: IGanpatiPandal) => {
+  const handleSelect = (pandal: IGanpatiPandal, index: number) => {
+    setSelectedIndex(index);
     dispatch(setSearchSelectedPandal(pandal));
     closeDrawer();
     if (router.pathname !== '/') router.push('/');
+  };
+
+  const handleToggleFavourite = (pandal: IGanpatiPandal) => {
+    if (favourites.some((fp: FavouritePandal) => fp.name === pandal.name)) {
+      dispatch(removeFavourite(pandal.name));
+    } else {
+      dispatch(addFavourite({ name: pandal.name, lat: Number(pandal.latitude), lng: Number(pandal.longitude) }));
+    }
   };
 
   return (
@@ -106,10 +116,9 @@ const MobileSearchDrawer: React.FC<Props> = ({ userLocation }) => {
 
       {/* ── Drawer ── */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-[10003] bg-surface rounded-t-3xl shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+        className={`drawer-height fixed bottom-0 left-0 right-0 z-[10003] bg-surface rounded-t-3xl shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
           open ? 'translate-y-0' : 'translate-y-full'
         }`}
-        style={{ maxHeight: '85dvh', minHeight: '85dvh' }}
       >
         {/* Drag handle */}
         <div className="flex-center pt-3.5 pb-2">
@@ -157,67 +166,27 @@ const MobileSearchDrawer: React.FC<Props> = ({ userLocation }) => {
           </div>
         </div>
 
-        {/* Results */}
-        <div className="overflow-y-auto flex-1 pb-8">
+                {/* Results — reuses the same SingleVerticalPandalCard as the index page list */}
+        <div className="overflow-y-auto flex-1 pb-8 px-2">
           {results.length === 0 ? (
             <div className="flex-center flex-col gap-2 py-12 text-text-secondary">
               <Search size={32} className="opacity-30" />
               <p className="text-sm">No pandals found for &ldquo;{query}&rdquo;</p>
             </div>
           ) : (
-            <ul>
+            <ul className="flex flex-col gap-1">
               {results.map(({ pandal, distance }, idx) => (
                 <li key={`${pandal.name}-${idx}`}>
-                  <button
-                    onClick={() => handleSelect(pandal)}
-                    className="w-full flex items-center gap-3.5 px-4 py-3.5 active:bg-primary/8 transition-colors text-left"
-                  >
-                    {/* Thumbnail */}
-                    <div className="relative shrink-0">
-                      {isFamous(pandal) && (
-                        <CrownIcon size={12} className="absolute -top-2 left-1/2 -translate-x-1/2 drop-shadow-sm" />
-                      )}
-                      <img
-                        src={pandal.image_url || FALLBACK_IMG}
-                        alt={pandal.name}
-                        className={`w-14 h-14 rounded-xl object-cover object-top shadow-sm ${
-                          isFamous(pandal)
-                            ? 'border-2 border-accent-gold'
-                            : 'border border-border'
-                        }`}
-                        onError={(e) => {
-                          e.currentTarget.src = FALLBACK_IMG;
-                          e.currentTarget.onerror = null;
-                        }}
-                      />
-                    </div>
-
-                    {/* Text */}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-text-primary leading-snug line-clamp-1">
-                        {highlight(pandal.name, query)}
-                      </p>
-                      <p className="text-xs text-text-secondary mt-0.5 line-clamp-1 flex items-center gap-1 capitalize">
-                        {pandal.location?.toLowerCase()}
-                        {distance && (
-                          <span className="text-primary font-semibold whitespace-nowrap">
-                            · {distance}
-                          </span>
-                        )}
-                      </p>
-                    </div>
-
-                    {/* Famous badge */}
-                    {isFamous(pandal) && (
-                      <span className="shrink-0 text-[9px] font-bold tracking-wide text-accent-gold bg-accent-gold/10 border border-accent-gold/40 rounded-full px-2 py-0.5">
-                        FAMOUS
-                      </span>
-                    )}
-                  </button>
-                  {/* Divider */}
-                  {idx < results.length - 1 && (
-                    <div className="mx-4 h-px bg-border/50" />
-                  )}
+                  <SingleVerticalPandalCard
+                    pandal={pandal}
+                    search={query}
+                    isSelected={selectedIndex === idx}
+                    favourites={favourites}
+                    highlightMatch={highlightMatch}
+                    distance={distance}
+                    onSelect={() => handleSelect(pandal, idx)}
+                    onToggleFavourite={() => handleToggleFavourite(pandal)}
+                  />
                 </li>
               ))}
             </ul>

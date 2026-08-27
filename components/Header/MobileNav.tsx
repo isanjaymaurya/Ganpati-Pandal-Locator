@@ -65,7 +65,7 @@ const MobileNav: React.FC = () => {
         title={open ? 'Close menu' : 'Open menu'}
         className="flex-center w-9 h-9 rounded-full text-accent-gold transition-colors"
       >
-        <Menu size={18} />
+        <Menu size={20} />
       </button>
 
       {/* Backdrop */}
@@ -95,11 +95,11 @@ const MobileNav: React.FC = () => {
           </button>
         </div>
 
-                {/* Nav items */}
+        {/* Nav items */}
         <nav className="flex-1 px-4 py-4 flex flex-col gap-2">
           {NAV_ITEMS.map(({ href, label, icon, external }) => {
             const isActive = !external && pathname === href;
-                        const itemClass = `nav-item ${isActive ? 'nav-item-active' : 'nav-item-inactive'}`;
+            const itemClass = `nav-item ${isActive ? 'nav-item-active' : 'nav-item-inactive'}`;
 
             return external ? (
               <a

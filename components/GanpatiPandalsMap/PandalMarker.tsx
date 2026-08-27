@@ -18,14 +18,12 @@ interface Props {
 function buildIcon(name: string): L.DivIcon {
   return L.divIcon({
     className: '',
-        html: `
+    html: `
       <div class="flex flex-col items-center">
         <img src="${BASE}/pandal-marker.png" class="w-14 h-14 object-contain" />
         <div class="flex flex-col items-center mt-1">
-          <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--accent-gold);"></div>
-          <div
-            class="bg-orange-100 text-center text-[8px] text-black uppercase font-bols rounded-xl border-2 border-accent-gold w-22 shadow px-2 py-1.5 pointer-events-none"
-          >
+          <div class="marker-triangle"></div>
+          <div class="bg-orange-100 text-center text-[8px] text-black uppercase rounded-xl border-2 border-accent-gold w-22 shadow px-2 py-1.5 pointer-events-none">
             ${name}
           </div>
         </div>
@@ -40,13 +38,17 @@ function buildIcon(name: string): L.DivIcon {
 const MAX_ZOOM = 18;
 
 const PandalMarker: React.FC<Props> = ({ pandal, markerKey, markerRef, userLocation }) => {
-  const lat = parseFloat(pandal.latitude);
-  const lng = parseFloat(pandal.longitude);
+  // Parse once, memoised with the pandal reference
+  const { lat, lng } = useMemo(() => ({
+    lat: parseFloat(pandal.latitude),
+    lng: parseFloat(pandal.longitude),
+  }), [pandal.latitude, pandal.longitude]);
+
   const icon = useMemo(() => buildIcon(pandal.name), [pandal.name]);
   const map = useMap();
 
   const handleClick = () => {
-        const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+    const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
 
     if (isMobile) {
       const mapSize = map.getSize();

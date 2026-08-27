@@ -32,7 +32,7 @@ const FEATURES = [
   {
     icon: <List size={22} />,
     title: 'Pandal Directory',
-    description: 'Browse a searchable, filterable list of all pandals with Name, Latitude & Longitude, Nearby Stations and Google Map Link / Direction details.',
+    description: 'Browse a searchable, filterable list of all pandals with Name, Latitude & Longitude, Location and Google Map Link / Direction details.',
     color: 'text-accent-pink'
   },
   {
@@ -55,9 +55,33 @@ const FEATURES = [
   },
 ];
 
+const aboutJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'About - Ganpati Pandal Locator',
+  url: 'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/about/',
+  description:
+    'Learn about the Ganpati Pandal Locator app - a free, community-powered tool to find Ganesh Chaturthi pandals across Mumbai on an interactive map.',
+  inLanguage: 'en-IN',
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Ganpati Pandal Locator',
+    url: 'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/',
+  },
+  author: {
+    '@type': 'Person',
+    name: 'Sanjay Maurya',
+    url: 'https://github.com/isanjaymaurya',
+  },
+};
+
 export default function AboutPage() {
   return (
-    <MainLayout>
+    <MainLayout
+      title="About | Ganpati Pandal Locator"
+      description="Learn about the Ganpati Pandal Locator app — a free, community-powered tool to find Ganesh Chaturthi pandals across Mumbai on an interactive map."
+      jsonLd={aboutJsonLd}
+    >
       <div className="max-w-2xl mx-auto px-4 py-6 md:pb-8 flex flex-col gap-6">
         {/* ── Hero ── */}
         <div className="rounded-2xl border-2 border-accent-gold bg-surface shadow-md text-center flex flex-col items-center px-6 py-8 gap-3 relative overflow-hidden">
