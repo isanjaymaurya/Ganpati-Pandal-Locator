@@ -1,24 +1,27 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-import type { IGanpatiPandal } from '@/types/global';
-import PandalMarker from './PandalMarker';
+
+import type { GanpatiPandal } from '@/types/global';
 import { isValidCoord } from '@/utils/geo';
+import PandalMarker from './PandalMarker';
 
 interface Props {
-  pandals: IGanpatiPandal[];
-  selectedPandal?: IGanpatiPandal | null;
+  pandals: GanpatiPandal[];
+  selectedPandal?: GanpatiPandal | null;
   popupIdx: number | null;
   userLocation?: [number, number] | null;
 }
 
-/** Returns true when pandal matches the selected one. */
-const isMatch = (pandal: IGanpatiPandal, selected: IGanpatiPandal | null | undefined) =>
+/** Returns true when a pandal matches the currently selected one. */
+const isMatch = (pandal: GanpatiPandal, selected: GanpatiPandal | null | undefined): boolean =>
   !!selected && pandal.name === selected.name && pandal.location === selected.location;
 
 const PandalClusterLayer: React.FC<Props> = ({ pandals, selectedPandal, popupIdx, userLocation }) => {
-  // Pre-filter valid coords once
-  const validPandals = pandals.filter((p) =>
-    isValidCoord(parseFloat(p.latitude), parseFloat(p.longitude))
+  // Pre-filter to only pandals with valid coordinates — memoised to avoid
+  // re-filtering on every render when only selectedPandal changes.
+  const validPandals = useMemo(
+    () => pandals.filter((p) => isValidCoord(parseFloat(p.latitude), parseFloat(p.longitude))),
+    [pandals],
   );
 
   return (

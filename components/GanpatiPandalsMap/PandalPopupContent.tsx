@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import { MapPinHouse, Navigation, Share2 } from 'lucide-react';
-import type { IGanpatiPandal } from '../../types/global';
-import { getDistanceKm, formatDistance, isValidCoord } from '@/utils/geo';
 
-const FALLBACK_IMG = 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress';
+import { FALLBACK_PANDAL_IMAGE } from '@/constants/map';
+import type { GanpatiPandal } from '@/types/global';
+import { formatDistance, getDistanceKm, isValidCoord } from '@/utils/geo';
 
 interface Props {
-  pandal: IGanpatiPandal;
+  pandal: GanpatiPandal;
   userLocation?: [number, number] | null;
 }
 
@@ -18,6 +18,7 @@ const PandalPopupContent: React.FC<Props> = ({ pandal, userLocation }) => {
     if (!isValidCoord(lat, lng)) return null;
     return formatDistance(getDistanceKm(userLocation[0], userLocation[1], lat, lng));
   })();
+
 
   const handleShare = useCallback(() => {
     const params = new URLSearchParams({
@@ -33,15 +34,15 @@ const PandalPopupContent: React.FC<Props> = ({ pandal, userLocation }) => {
     }
   }, [pandal.name, pandal.latitude, pandal.longitude]);
 
-  return (
+    return (
     <>
       <div className="flex items-start gap-2">
         <img
-          src={pandal.image_url || FALLBACK_IMG}
+          src={pandal.image_url || FALLBACK_PANDAL_IMAGE}
           alt={pandal.name}
           className="h-12 w-12 object-cover object-top rounded shrink-0"
           onError={(e) => {
-            e.currentTarget.src = FALLBACK_IMG;
+            e.currentTarget.src = FALLBACK_PANDAL_IMAGE;
             e.currentTarget.onerror = null;
           }}
         />

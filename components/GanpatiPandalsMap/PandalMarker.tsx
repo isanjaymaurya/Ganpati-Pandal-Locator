@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
-import { Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import type { IGanpatiPandal } from '@/types/global';
-import { MOBILE_BREAKPOINT, MOBILE_MAP_OFFSET_FRACTION } from '@/utils/geo';
-import PandalPopupContent from './PandalPopupContent';
+import { Marker, Popup, useMap } from 'react-leaflet';
+
 import { BASE } from '@/constants/env';
+import { MAX_ZOOM, MOBILE_BREAKPOINT, MOBILE_MAP_OFFSET_FRACTION } from '@/constants/map';
+import type { GanpatiPandal } from '@/types/global';
+import PandalPopupContent from './PandalPopupContent';
 
 interface Props {
-  pandal: IGanpatiPandal;
+  pandal: GanpatiPandal;
   markerKey: string | number;
   markerRef?: (el: L.Marker | null) => void;
   userLocation?: [number, number] | null;
@@ -34,8 +35,6 @@ function buildIcon(name: string): L.DivIcon {
     popupAnchor: [0, -52],
   });
 }
-
-const MAX_ZOOM = 18;
 
 const PandalMarker: React.FC<Props> = ({ pandal, markerKey, markerRef, userLocation }) => {
   // Parse once, memoised with the pandal reference

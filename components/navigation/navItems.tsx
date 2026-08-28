@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, List, Info, Github } from 'lucide-react';
+import { Github, Info, List, MapPin } from 'lucide-react';
 
 export interface NavItem {
   href: string;

@@ -1,4 +1,5 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+import { Head, Html, Main, NextScript } from 'next/document';
+
 import { BASE } from '@/constants/env';
 
 export default function Document() {
@@ -6,7 +7,6 @@ export default function Document() {
     <Html lang="en-IN">
       <Head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
 
         {/* Favicons */}
         <link rel="icon" href={`${BASE}/favicon.ico`} />

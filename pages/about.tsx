@@ -1,20 +1,23 @@
 import React from 'react';
-import MainLayout from '@/components/layout/MainLayout';
+
+import Image from 'next/image';
+
 import {
-  MonitorSmartphone,
-  Star,
+  ExternalLink,
+  FileSpreadsheet,
+  GitBranch,
   Heart,
   List,
-  GitBranch,
-  FileSpreadsheet,
-  Users,
-  Navigation,
-  ExternalLink,
-  Sparkles,
   Map,
+  MonitorSmartphone,
+  Navigation,
+  Sparkles,
+  Star,
+  Users,
 } from 'lucide-react';
-import Image from 'next/image';
+
 import { BASE } from '@/constants/env';
+import MainLayout from '@/components/layout/MainLayout';
 
 const FEATURES = [
   {

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useMap } from 'react-leaflet';
+
 import { LocateFixed } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useMap } from 'react-leaflet';
 
 interface Props {
   userLocation: [number, number] | null;

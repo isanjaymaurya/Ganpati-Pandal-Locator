@@ -1,3 +1,7 @@
+/**
+ * Pure geographic utility functions.
+ */
+
 /** Haversine formula — returns straight-line distance in kilometres. */
 export function getDistanceKm(
   lat1: number,
@@ -5,7 +9,7 @@ export function getDistanceKm(
   lat2: number,
   lng2: number,
 ): number {
-  const R = 6371;
+  const EARTH_RADIUS_KM = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLng = ((lng2 - lng1) * Math.PI) / 180;
   const a =
@@ -13,7 +17,7 @@ export function getDistanceKm(
     Math.cos((lat1 * Math.PI) / 180) *
       Math.cos((lat2 * Math.PI) / 180) *
       Math.sin(dLng / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return EARTH_RADIUS_KM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 /** Format a km value → "350 m" (< 1 km) or "2.4 km". */
@@ -25,12 +29,3 @@ export function formatDistance(km: number): string {
 export function isValidCoord(lat: number, lng: number): boolean {
   return isFinite(lat) && isFinite(lng) && lat !== 0 && lng !== 0;
 }
-
-/** Breakpoint (px) below which the layout is considered mobile. */
-export const MOBILE_BREAKPOINT = 768;
-
-/**
- * Fraction of map height to shift the fly-to target upward on mobile.
- * Keeps the marker near the bottom-center so the popup is fully visible.
- */
-export const MOBILE_MAP_OFFSET_FRACTION = 0.32;

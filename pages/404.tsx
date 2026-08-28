@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { MapPin, Home } from 'lucide-react';
+import { Home, MapPin } from 'lucide-react';
 
 import MainLayout from '@/components/layout/MainLayout';
 

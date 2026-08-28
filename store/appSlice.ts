@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { IGanpatiPandal } from '../types/global';
+
+import type { GanpatiPandal } from '@/types/global';
 
 export interface FavouritePandal {
   name: string;
@@ -9,7 +10,7 @@ export interface FavouritePandal {
 
 export interface AppState {
   favourites: FavouritePandal[];
-  searchSelectedPandal: IGanpatiPandal | null;
+  searchSelectedPandal: GanpatiPandal | null;
 }
 
 const initialState: AppState = {
@@ -29,7 +30,7 @@ const appSlice = createSlice({
     removeFavourite: (state, action: PayloadAction<string>) => {
       state.favourites = state.favourites.filter(p => p.name !== action.payload);
     },
-    setSearchSelectedPandal: (state, action: PayloadAction<IGanpatiPandal | null>) => {
+    setSearchSelectedPandal: (state, action: PayloadAction<GanpatiPandal | null>) => {
       state.searchSelectedPandal = action.payload;
     },
   },

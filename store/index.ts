@@ -1,8 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
 import favouritePandalsReducer from './appSlice';
 import type { AppState } from './appSlice';
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
   key: 'favouritePandals',
@@ -18,7 +28,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore redux-persist actions
+        // Ignore redux-persist action types
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
@@ -26,7 +36,6 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-export type RootState = {
-  favourites: AppState;
-};
+/** Derived from the store itself — always stays in sync with the reducer shape. */
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

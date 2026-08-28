@@ -1,14 +1,15 @@
 import React from 'react';
-import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-import { BASE } from '@/constants/env';
 import { MapPin } from 'lucide-react';
+import { Marker, Popup } from 'react-leaflet';
+
+import { BASE } from '@/constants/env';
 
 const userLocationIcon = L.divIcon({
   className: '',
   html: `
     <div class="flex flex-col items-center pointer-events-none">
-      <img src="${BASE}/user-location-marker.svg" class="w-10 h-10" />
+      <img src="${BASE}/user-location-marker.png" class="w-14 h-14" />
       <div class="flex flex-col items-center mt-1 pointer-events-none">
         <div class="marker-triangle"></div>
         <div class="bg-orange-100 text-black shadow-md rounded-full px-2.5 py-1 text-[9px] font-bold tracking-wide whitespace-nowrap border-2 border-accent-gold pointer-events-none">YOU ARE HERE</div>

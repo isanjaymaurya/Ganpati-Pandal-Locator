@@ -1,8 +1,9 @@
 ﻿import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import Header from '@/components/Header/Header';
+
 import DesktopFooter from '@/components/Footer/DesktopFooter';
+import Header from '@/components/Header/Header';
 
 const SITE_URL = 'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator';
 const OG_IMAGE = `${SITE_URL}/android-chrome-512x512.png`;
@@ -53,6 +54,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   return (
     <>
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
         <link rel="canonical" href={canonicalUrl} />

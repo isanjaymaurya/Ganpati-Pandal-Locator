@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, ExternalLink, Share2, Check } from 'lucide-react';
+
+import { Check, ExternalLink, Menu, Share2, X } from 'lucide-react';
+
 import { NAV_ITEMS } from '@/components/navigation/navItems';
 
 const MobileNav: React.FC = () => {

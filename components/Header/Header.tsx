@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 
+import { BASE } from '@/constants/env';
 import DesktopNav from './DesktopNav';
 import MobileNav from './MobileNav';
-import { BASE } from '@/constants/env';
 
 const Header: React.FC = () => (
   <header className="header-gradient sticky top-0 z-[9999] shadow-md w-full flex items-center h-14">

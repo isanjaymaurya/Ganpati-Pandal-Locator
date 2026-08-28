@@ -1,19 +1,22 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import type { FavouritePandal } from '@/store/appSlice';
+
+import { AutoSizer, CellMeasurer, CellMeasurerCache, List } from 'react-virtualized';
+
 import { addFavourite, removeFavourite } from '@/store/appSlice';
-import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
-import type { IGanpatiPandal } from '@/types/global';
+import type { FavouritePandal } from '@/store/appSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import type { GanpatiPandal } from '@/types/global';
+import { formatDistance, getDistanceKm, isValidCoord } from '@/utils/geo';
 import { isFamous } from '@/utils/pandal';
-import { getDistanceKm, formatDistance, isValidCoord } from '@/utils/geo';
-import { highlightMatch } from '@/utils/highlight';
+
 import SingleVerticalPandalCard from '@/components/SingleVerticalPandalCard/SingleVerticalPandalCard';
-import PandalListFilters, { type FavouriteFilterType } from './PandalListFilters';
+
 import NearbyBanner from './NearbyBanner';
+import PandalListFilters, { type FavouriteFilterType } from './PandalListFilters';
 
 interface Props {
-  ganpatiPandals: IGanpatiPandal[];
-  onSelectPandal?: (pandal: IGanpatiPandal) => void;
+  ganpatiPandals: GanpatiPandal[];
+  onSelectPandal?: (pandal: GanpatiPandal) => void;
   userLocation?: [number, number] | null;
 }
 
@@ -37,8 +40,8 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal, u
     [ganpatiPandals, search],
   );
 
-    // 2. Attach distance + sort (by distance when located, by famous otherwise)
-  const pandalsWithDistance = useMemo((): Array<{ pandal: IGanpatiPandal; distance: string | null }>  => {
+      // 2. Attach distance + sort (by distance when located, by famous otherwise)
+  const pandalsWithDistance = useMemo((): Array<{ pandal: GanpatiPandal; distance: string | null }> => {
     if (!userLocation) {
       return [...searchedPandals]
         .sort((a, b) => Number(isFamous(b)) - Number(isFamous(a)))
@@ -69,7 +72,7 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal, u
     return pandalsWithDistance;
   }, [favouriteFilter, pandalsWithDistance, favourites]);
 
-    const toggleFavourite = useCallback((pandal: IGanpatiPandal) => {
+    const toggleFavourite = useCallback((pandal: GanpatiPandal) => {
     if (favourites.some((fp: FavouritePandal) => fp.name === pandal.name)) {
       dispatch(removeFavourite(pandal.name));
     } else {
@@ -83,12 +86,11 @@ const PandalsVirutalList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal, u
       const isSelected = selectedIndex === index;
       return (
         <div key={key} style={style} className="p-1">
-          <SingleVerticalPandalCard
+                    <SingleVerticalPandalCard
             pandal={pandal}
             search={search}
             isSelected={isSelected}
             favourites={favourites}
-            highlightMatch={highlightMatch}
             distance={distance}
             onSelect={() => { setSelectedIndex(index); onSelectPandal?.(pandal); }}
             onToggleFavourite={() => toggleFavourite(pandal)}

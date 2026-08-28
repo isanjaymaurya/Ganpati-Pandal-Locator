@@ -1,17 +1,21 @@
 import React from 'react';
-import type { IGanpatiPandal } from '../../types/global';
-import type { FavouritePandal } from '../../store/appSlice';
+
 import { Heart, MapPin } from 'lucide-react';
-import HeartIcon from '../icons/HeartIcon';
-import CrownIcon from '../icons/CrownIcon';
+
+import { FALLBACK_PANDAL_IMAGE } from '@/constants/map';
+import type { FavouritePandal } from '@/store/appSlice';
+import type { GanpatiPandal } from '@/types/global';
 import { isFamous } from '@/utils/pandal';
+import { highlightMatch } from '@/utils/highlight';
+
+import CrownIcon from '@/components/icons/CrownIcon';
+import HeartIcon from '@/components/icons/HeartIcon';
 
 interface Props {
-  pandal: IGanpatiPandal;
+  pandal: GanpatiPandal;
   search: string;
   isSelected?: boolean;
   favourites: FavouritePandal[];
-  highlightMatch: (text: string, filter: string) => React.ReactNode;
   distance?: string | null;
   onSelect?: () => void;
   onToggleFavourite: () => void;
@@ -22,10 +26,9 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
   search,
   isSelected,
   favourites,
-  highlightMatch,
   distance,
   onSelect,
-  onToggleFavourite
+  onToggleFavourite,
 }) => {
   const isFavourite = favourites.some((fp: FavouritePandal) => fp.name === pandal.name);
   return (
@@ -39,12 +42,12 @@ const SingleVerticalPandalCard: React.FC<Props> = ({
         {isFamous(pandal) && (
           <CrownIcon className="absolute -top-2.5 left-1/2 -translate-x-1/2 drop-shadow-sm" size={11} />
         )}
-        <img
-          src={pandal.image_url || 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress'}
+                <img
+          src={pandal.image_url || FALLBACK_PANDAL_IMAGE}
           alt={pandal.name}
           className={`w-12 h-12 rounded-lg object-cover object-top border shadow-sm ${isFamous(pandal) ? 'border-2 border-accent-gold' : 'border-border'}`}
           onError={(e) => {
-            e.currentTarget.src = 'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress';
+            e.currentTarget.src = FALLBACK_PANDAL_IMAGE;
             e.currentTarget.onerror = null;
           }}
         />

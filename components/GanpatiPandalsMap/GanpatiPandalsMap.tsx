@@ -1,51 +1,80 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import 'react-leaflet-markercluster/styles';
 
-import type { IGanpatiPandal } from '@/types/global';
-import { isValidCoord, MOBILE_BREAKPOINT, MOBILE_MAP_OFFSET_FRACTION } from '@/utils/geo';
-import LocateControl from './LocateControl';
-import UserLocationMarker from './UserLocationMarker';
-import PandalClusterLayer from './PandalClusterLayer';
+import {
+  DEFAULT_CENTER,
+  MAX_ZOOM,
+  MOBILE_BREAKPOINT,
+  MOBILE_MAP_OFFSET_FRACTION,
+} from '@/constants/map';
+import type { GanpatiPandal } from '@/types/global';
+import { isValidCoord } from '@/utils/geo';
 
-const DEFAULT_CENTER: [number, number] = [18.9582, 72.8321];
+import LocateControl from './LocateControl';
+import PandalClusterLayer from './PandalClusterLayer';
+import UserLocationMarker from './UserLocationMarker';
 
 type Props = {
-  ganpatiPandals: IGanpatiPandal[];
-  selectedPandal?: IGanpatiPandal | null;
+  ganpatiPandals: GanpatiPandal[];
+  selectedPandal?: GanpatiPandal | null;
   onLocate?: (coords: [number, number]) => void;
+  /** Ref set to true when the page was opened via a shared URL (has lat/lng params). */
+  isSharedUrl?: RefObject<boolean>;
 };
 
-export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal, onLocate }: Props) {
+export default function GanpatiPandalsMap({
+  ganpatiPandals,
+  selectedPandal,
+  onLocate,
+  isSharedUrl,
+}: Props) {
   const mapRef = useRef<L.Map | null>(null);
   const [popupIdx, setPopupIdx] = useState<number | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
-  const handleLocate = (coords: [number, number]) => {
-    setUserLocation(coords);
-    onLocate?.(coords);
-  };
+  // Derive initial center/zoom from selectedPandal when opening via a shared URL.
+  // MapContainer only reads `center` and `zoom` once on mount, so we compute
+  // them before the first render to avoid any flash of the default Mumbai view.
+  const sharedLat = selectedPandal ? parseFloat(selectedPandal.latitude) : NaN;
+  const sharedLng = selectedPandal ? parseFloat(selectedPandal.longitude) : NaN;
+  const hasSharedCoords = isSharedUrl?.current && isValidCoord(sharedLat, sharedLng);
+  const initialCenter: [number, number] = hasSharedCoords ? [sharedLat, sharedLng] : DEFAULT_CENTER;
+  const initialZoom = hasSharedCoords ? MAX_ZOOM : 12;
 
-    // Fly to selected pandal whenever it changes
+  const handleLocate = useCallback(
+    (coords: [number, number]) => {
+      setUserLocation(coords);
+      onLocate?.(coords);
+    },
+    [onLocate],
+  );
+
+  // Fly to the selected pandal whenever it changes.
   useEffect(() => {
     if (selectedPandal && mapRef.current) {
       const lat = parseFloat(selectedPandal.latitude);
       const lng = parseFloat(selectedPandal.longitude);
       if (!isValidCoord(lat, lng)) return;
 
-            const map = mapRef.current;
-      const targetZoom = 18;
-      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-
-      if (isMobile) {
-        const mapSize = map.getSize();
-        const targetPoint = map.project([lat, lng], targetZoom);
-        const adjustedPoint = targetPoint.subtract([0, mapSize.y * MOBILE_MAP_OFFSET_FRACTION]);
-        map.flyTo(map.unproject(adjustedPoint, targetZoom), targetZoom, { animate: true, duration: 0.8 });
+      // Shared URL: map already opened at the correct location — just open the
+      // popup without flying (set view instantly instead of animating).
+      if (isSharedUrl?.current) {
+        mapRef.current.setView([lat, lng], MAX_ZOOM, { animate: false });
       } else {
-        map.flyTo([lat, lng], targetZoom, { animate: true, duration: 0.8 });
+        const map = mapRef.current;
+        const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+
+        if (isMobile) {
+          const mapSize = map.getSize();
+          const targetPoint = map.project([lat, lng], MAX_ZOOM);
+          const adjustedPoint = targetPoint.subtract([0, mapSize.y * MOBILE_MAP_OFFSET_FRACTION]);
+          map.flyTo(map.unproject(adjustedPoint, MAX_ZOOM), MAX_ZOOM, { animate: true, duration: 0.8 });
+        } else {
+          map.flyTo([lat, lng], MAX_ZOOM, { animate: true, duration: 0.8 });
+        }
       }
 
       const idx = ganpatiPandals.findIndex(
@@ -55,13 +84,15 @@ export default function GanpatiPandalsMap({ ganpatiPandals, selectedPandal, onLo
     } else {
       setPopupIdx(null);
     }
+    // isSharedUrl is a stable ref — intentionally excluded from deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPandal, ganpatiPandals]);
 
   return (
     <div className="relative">
-      <MapContainer
-        center={DEFAULT_CENTER}
-        zoom={12}
+            <MapContainer
+        center={initialCenter}
+        zoom={initialZoom}
         className="map-panel-height w-full"
         ref={mapRef}
         zoomControl={false}
