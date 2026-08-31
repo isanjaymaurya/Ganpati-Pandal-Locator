@@ -73,7 +73,7 @@ const PandalPopupContent: React.FC<Props> = ({ pandal, userLocation }) => {
           href={pandal.gmap_link}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 flex-center gap-1 text-primary border border-primary text-[9px] font-bold py-1.5 px-3 rounded hover:opacity-90 transition-opacity shadow-sm"
+          className="flex-1 flex-center gap-1 !text-primary border border-primary text-[9px] font-bold py-1.5 px-3 rounded hover:opacity-90 transition-opacity shadow-sm"
         >
           <Navigation size={9} /> Google Map
         </a>

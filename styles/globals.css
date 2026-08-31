@@ -196,7 +196,3 @@ button {
     height: calc(100dvh - 7.6rem);
   }
 }
-
-.leaflet-container a {
-  color: var(--primary) !important;
-}

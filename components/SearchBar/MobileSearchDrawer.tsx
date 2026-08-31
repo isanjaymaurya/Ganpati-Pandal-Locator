@@ -43,6 +43,10 @@ const MobileSearchDrawer: React.FC<Props> = ({ userLocation }) => {
   const [isAnimating, setIsAnimating] = useState(false); // suppress CSS transition during drag
 
   const closeDrawer = useCallback(() => {
+    // Blur the input first so the mobile keyboard is dismissed before the
+    // drawer animates away. Without this, the keyboard stays visible even
+    // after the drawer slides off-screen.
+    inputRef.current?.blur();
     setDragOffset(0);
     setOpen(false);
     setQuery('');

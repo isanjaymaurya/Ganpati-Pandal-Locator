@@ -15,7 +15,7 @@ export default function Document() {
         <link rel="apple-touch-icon" sizes="180x180" href={`${BASE}/apple-touch-icon.png`} />
 
         {/* PWA */}
-        <link rel="manifest" href={`${BASE}/manifest.json`} />
+        <link rel="manifest" href={`${BASE}/api/manifest`} />
         <meta name="theme-color" content="#C45000" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
