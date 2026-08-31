@@ -24,7 +24,7 @@ function buildIcon(name: string): L.DivIcon {
         <img src="${BASE}/pandal-marker.png" class="w-14 h-14 object-contain" />
         <div class="flex flex-col items-center mt-1">
           <div class="marker-triangle"></div>
-          <div class="bg-orange-100 text-center text-[8px] text-black uppercase rounded-xl border-2 border-accent-gold w-22 shadow px-2 py-1.5 pointer-events-none">
+          <div class="bg-orange-100 text-center text-[8px] text-black uppercase rounded-xl border-2 border-accent-gold w-24 shadow px-2 py-1.5 pointer-events-none">
             ${name}
           </div>
         </div>

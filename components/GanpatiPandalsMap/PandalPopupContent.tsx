@@ -47,8 +47,8 @@ const PandalPopupContent: React.FC<Props> = ({ pandal, userLocation }) => {
           }}
         />
         <div>
-          <h1 className="text-[10px] font-bold mb-1 text-primary uppercase">{pandal.name}</h1>
-          <p className="text-[9px] capitalize flex gap-0.5">
+          <h1 className="text-[10px] font-bold mb-1 text-primary uppercase max-w-24 md:max-w-40">{pandal.name}</h1>
+          <p className="text-[9px] capitalize flex gap-0.5 max-w-24 md:max-w-40">
             <MapPinHouse size={10} className="shrink-0" /> {pandal.location.toLowerCase()}
           </p>
           {distance && (
