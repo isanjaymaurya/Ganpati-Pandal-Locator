@@ -24,28 +24,45 @@ const PandalClusterLayer: React.FC<Props> = ({ pandals, selectedPandal, popupIdx
     [pandals],
   );
 
+  // popupIdx is an index into the original `pandals` array; we compare by
+  // identity (name + location) rather than index to avoid mismatches when
+  // invalid-coord entries precede the selected pandal.
+  const { selected, clustered } = useMemo(() => {
+    const selectedPandals: typeof validPandals = [];
+    const clusteredPandals: typeof validPandals = [];
+    for (const pandal of validPandals) {
+      if (isMatch(pandal, selectedPandal)) selectedPandals.push(pandal);
+      else clusteredPandals.push(pandal);
+    }
+    return { selected: selectedPandals, clustered: clusteredPandals };
+  }, [validPandals, selectedPandal]);
+
   return (
     <>
       {/* Selected pandal — rendered outside the cluster so it stays visible at any zoom */}
-      {validPandals.map((pandal, idx) => {
-        if (!isMatch(pandal, selectedPandal)) return null;
-        return (
-          <PandalMarker
-            key={`selected-${idx}`}
-            pandal={pandal}
-            markerKey={`selected-${idx}`}
-            userLocation={userLocation}
-            markerRef={(el) => { if (el && popupIdx === idx) el.openPopup(); }}
-          />
-        );
-      })}
+      {selected.map((pandal) => (
+        <PandalMarker
+          key={`selected-${pandal.name}-${pandal.location}`}
+          pandal={pandal}
+          markerKey={`selected-${pandal.name}`}
+          userLocation={userLocation}
+          markerRef={(el) => { if (el && popupIdx !== null && isMatch(pandal, selectedPandal)) el.openPopup(); }}
+        />
+      ))}
 
       {/* All other pandals — clustered */}
-      <MarkerClusterGroup chunkedLoading>
-        {validPandals.map((pandal, idx) => {
-          if (isMatch(pandal, selectedPandal)) return null;
-          return <PandalMarker key={idx} pandal={pandal} markerKey={idx} userLocation={userLocation} />;
-        })}
+      <MarkerClusterGroup
+        key={selectedPandal ? `cluster-${selectedPandal.name}-${selectedPandal.location}` : 'cluster-none'}
+        chunkedLoading
+      >
+        {clustered.map((pandal, idx) => (
+          <PandalMarker
+            key={`${pandal.name}-${idx}`}
+            pandal={pandal}
+            markerKey={idx}
+            userLocation={userLocation}
+          />
+        ))}
       </MarkerClusterGroup>
     </>
   );

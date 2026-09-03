@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -10,11 +10,12 @@ const MobileNav: React.FC = () => {
   const { pathname } = useRouter();
   const [open, setOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Close on route change
   useEffect(() => { setOpen(false); }, [pathname]);
 
-  // Close on outside click
+ // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -26,6 +27,26 @@ const MobileNav: React.FC = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, [open]);
 
+  useEffect(() => {
+    if (!open || !sidebarRef.current) return;
+    closeButtonRef.current?.focus();
+    const focusable = sidebarRef.current.querySelectorAll<HTMLElement>(
+      'a, button, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const trap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', trap);
+    return () => document.removeEventListener('keydown', trap);
+  }, [open]);
+
     // Prevent body scroll when open
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -34,7 +55,7 @@ const MobileNav: React.FC = () => {
 
   const [shared, setShared] = useState(false);
 
-  const handleShare = async () => {
+  const handleShare = useCallback(async () => {
     const shareData = {
       title: 'Ganpati Pandal Locator',
       text: 'Find Ganpati pandals near you across Mumbai this Ganesh Chaturthi!',
@@ -56,7 +77,7 @@ const MobileNav: React.FC = () => {
         // Clipboard also unavailable — do nothing
       }
     }
-  };
+  }, []);
 
   return (
     <>
@@ -64,7 +85,8 @@ const MobileNav: React.FC = () => {
       <button
         onClick={() => setOpen(true)}
         aria-label="Open menu"
-        title={open ? 'Close menu' : 'Open menu'}
+        aria-expanded={open}
+        aria-haspopup="dialog"
         className="flex-center w-9 h-9 rounded-full text-accent-gold transition-colors"
       >
         <Menu size={20} />
@@ -81,7 +103,11 @@ const MobileNav: React.FC = () => {
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 right-0 h-full w-72 z-[10011] flex flex-col shadow-2xl transition-transform duration-300 ease-in-out bg-orange-50 ${
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        inert={!open}
+        className={`fixed top-0 right-0 h-full w-72 z-[10011] flex flex-col shadow-2xl transition-transform duration-300 ease-in-out bg-background ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -89,9 +115,10 @@ const MobileNav: React.FC = () => {
         <div className="flex-between px-5 py-4 border-b border-primary">
           <span className="font-bold text-sm tracking-wide uppercase">Menu</span>
           <button
+            ref={closeButtonRef}
             onClick={() => setOpen(false)}
             aria-label="Close menu"
-            className="flex-center w-8 h-8 rounded-full border border-gray-300 hover:bg-white/10 transition-colors"
+            className="flex-center w-8 h-8 rounded-full border border-border hover:bg-black/10 transition-colors"
           >
             <X size={16} />
           </button>
@@ -132,7 +159,6 @@ const MobileNav: React.FC = () => {
           {/* Share button — styled as a nav item */}
           <button
             onClick={handleShare}
-            title="Share this app"
             aria-label="Share this app"
             className="nav-item nav-item-inactive w-full"
           >

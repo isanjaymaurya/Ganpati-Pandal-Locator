@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React, { useCallback, useState } from 'react';
 import { LocateFixed } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useMap } from 'react-leaflet';
@@ -13,18 +12,18 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
   const map = useMap();
   const [locating, setLocating] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (userLocation) {
       map.setView(userLocation, 15, { animate: true });
       return;
     }
     if (!navigator.geolocation) {
-      toast.dismiss(); 
+      toast.dismiss();
       toast.error('Geolocation is not supported by your browser.');
       return;
     }
     setLocating(true);
-    toast.dismiss(); 
+    toast.dismiss();
     const toastId = toast.loading('Finding your location…');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -32,7 +31,7 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
         onLocate(coords);
         map.setView(coords, 15, { animate: true });
         setLocating(false);
-        toast.dismiss(); 
+        toast.dismiss();
         toast.success('Location found!', { id: toastId });
       },
       (err) => {
@@ -48,15 +47,16 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
       },
       { enableHighAccuracy: true, timeout: 15000 },
     );
-  };
+  }, [userLocation, onLocate, map]);
 
   return (
     <div className="leaflet-top leaflet-right pointer-events-auto">
       <div className="leaflet-control leaflet-bar !border-none !mt-2.5 !mr-2.5">
         <button
           onClick={handleClick}
-          title={userLocation ? 'Go to my location' : 'Find my location'}
-          className="flex-center rounded-full border border-black bg-white shadow-sm w-8 h-8"
+          data-tooltip={userLocation ? 'Go to my location' : 'Find my location'}
+          aria-label={userLocation ? 'Go to my location' : 'Find my location'}
+          className="tooltip flex-center rounded-full border border-black bg-white shadow-sm w-8 h-8"
           disabled={locating}
         >
           <LocateFixed className={`w-4 h-4 ${locating ? 'animate-spin' : ''}`} />

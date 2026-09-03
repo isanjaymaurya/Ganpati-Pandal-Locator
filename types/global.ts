@@ -4,10 +4,15 @@ export type GanpatiPandal = {
   latitude: string;
   longitude: string;
   location: string;
+  nearby_station: string;
   gmap_link: string;
   image_url: string;
-  is_famous: string;
+  is_famous: boolean;
 };
 
-/** @deprecated Use `GanpatiPandal` instead. */
-export type IGanpatiPandal = GanpatiPandal;
+/** A persisted favourite pandal entry stored in Redux + localStorage. */
+export interface FavouritePandal {
+  name: string;
+  lat: number;
+  lng: number;
+}

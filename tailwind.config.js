@@ -14,6 +14,7 @@ module.exports = {
         'accent-pink': 'var(--accent-pink)',
         'accent-orange': 'var(--accent-orange)',
         'accent-gold': 'var(--accent-gold)',
+        'accent-blue': 'var(--accent-blue)',
         'gold-light': 'var(--gold-light)',
         'orange-light': 'var(--orange-light)',
         background: 'var(--background)',
@@ -28,8 +29,4 @@ module.exports = {
     },
   },
   plugins: [],
-  safelist: [
-    'h-[85dvh]',
-    'min-h-[85dvh]',
-  ],
 }

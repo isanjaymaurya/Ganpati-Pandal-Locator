@@ -1,27 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
 import { GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { Agent } from 'node:https';
-
 import axios from 'axios';
 import Papa from 'papaparse';
+import { List, Map } from 'lucide-react';
 
 import { CSV_URL } from '@/constants/env';
 import { setSearchSelectedPandal } from '@/store/appSlice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import type { GanpatiPandal } from '@/types/global';
-
 import MainLayout from '@/components/layout/MainLayout';
 
-const MobileSearchDrawer = dynamic(
-  () => import('@/components/SearchBar/MobileSearchDrawer'),
-  { ssr: false },
-);
-
-const PandalsVirutalList = dynamic(
-  () => import('@/components/PandalsVirutalList/PandalsVirutalList'),
+const PandalsVirtualList = dynamic(
+  () => import('@/components/PandalsVirtualList/PandalsVirtualList'),
   { ssr: false, loading: () => null },
 );
 
@@ -35,20 +27,23 @@ type Props = {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const agent = new Agent({ rejectUnauthorized: false });
-  const response = await axios.get<string>(CSV_URL, {
-    httpsAgent: agent,
-    responseType: 'text',
-  });
+  const response = await axios.get<string>(CSV_URL, { responseType: 'text' });
 
-  const parsed = Papa.parse<GanpatiPandal>(response.data, {
+  const parsed = Papa.parse<Omit<GanpatiPandal, 'is_famous'> & { is_famous: string }>(response.data, {
     header: true,
     skipEmptyLines: true,
   });
 
+  const ganpatiPandals: GanpatiPandal[] = parsed.data
+  .filter((p) => p.name?.trim() && p.latitude?.trim() && p.longitude?.trim())
+  .map((p) => ({
+    ...p,
+    is_famous: p.is_famous?.toLowerCase() === 'true',
+  }));
+
   return {
     props: {
-      ganpatiPandals: parsed.data,
+      ganpatiPandals,
     },
   };
 };
@@ -58,7 +53,7 @@ export default function Home({ ganpatiPandals }: Props) {
   const searchSelectedPandal = useAppSelector((state) => state.favourites.searchSelectedPandal);
   const [selectedPandal, setSelectedPandal] = useState<GanpatiPandal | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  // True only for the very first render when the URL already carries a pandal
+  const [mobileTab, setMobileTab] = useState<'map' | 'list'>('map');
   const isSharedUrl = useRef(false);
   const total = ganpatiPandals.length;
 
@@ -107,45 +102,18 @@ export default function Home({ ganpatiPandals }: Props) {
     }
   }, [searchSelectedPandal, dispatch, handleSelectPandal]);
 
-  // Memoised so the JSON-LD object is stable across re-renders
   const homeJsonLd = useMemo(
     () => ({
       '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'WebSite',
-          '@id': 'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/#website',
-          name: 'Ganpati Pandal Locator',
-          url: 'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/',
-          description: `Explore ${total}+ Ganpati pandals across Mumbai this Ganesh Chaturthi.`,
-          inLanguage: 'en-IN',
-          author: {
-            '@type': 'Person',
-            name: 'Sanjay Maurya',
-            url: 'https://github.com/isanjaymaurya',
-          },
-          potentialAction: {
-            '@type': 'SearchAction',
-            target: {
-              '@type': 'EntryPoint',
-              urlTemplate:
-                'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/?name={search_term_string}',
-            },
-            'query-input': 'required name=search_term_string',
-          },
-        },
-        {
-          '@type': 'WebApplication',
-          name: 'Ganpati Pandal Locator',
-          url: 'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/',
-          applicationCategory: 'TravelApplication',
-          operatingSystem: 'Any',
-          browserRequirements: 'Requires JavaScript',
-          description: `Find ${total}+ Ganpati pandals across Mumbai on an interactive map during Ganesh Chaturthi.`,
-          offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
-          author: { '@type': 'Person', name: 'Sanjay Maurya' },
-        },
-      ],
+      '@type': 'WebApplication',
+      name: 'Ganpati Pandal Locator',
+      url: 'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/',
+      applicationCategory: 'TravelApplication',
+      operatingSystem: 'Any',
+      browserRequirements: 'Requires JavaScript',
+      description: `Find ${total}+ Ganpati pandals across Mumbai on an interactive map during Ganesh Chaturthi.`,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+      author: { '@type': 'Person', name: 'Sanjay Maurya' },
     }),
     [total],
   );
@@ -156,9 +124,36 @@ export default function Home({ ganpatiPandals }: Props) {
       description={`Explore ${total}+ Ganpati pandals across Mumbai this Ganesh Chaturthi. Find pandals near you on an interactive map, get Google Maps directions, search by name or location, and save your favourites.`}
       jsonLd={homeJsonLd}
     >
+            <div role="tablist" aria-label="View mode" className="md:hidden flex border-b border-border bg-surface sticky top-14 z-[900]">
+        <button
+          role="tab"
+          onClick={() => setMobileTab('map')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold transition-colors ${
+            mobileTab === 'map'
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-text-secondary'
+          }`}
+          aria-selected={mobileTab === 'map'}
+        >
+          <Map size={14} /> Map
+        </button>
+        <button
+          role="tab"
+          onClick={() => setMobileTab('list')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold transition-colors ${
+            mobileTab === 'list'
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-text-secondary'
+          }`}
+          aria-selected={mobileTab === 'list'}
+        >
+          <List size={14} /> List
+        </button>
+      </div>
+
       <section className="md:mx-4 md:mt-4">
         <div className="flex flex-col md:flex-row md:items-start md:gap-4">
-          <div className="w-full md:w-1/2 lg:w-2/3">
+          <div className={`w-full md:w-1/2 lg:w-2/3 ${mobileTab === 'list' ? 'hidden md:block' : ''}`}>
             <GanpatiPandalsMap
               ganpatiPandals={ganpatiPandals}
               selectedPandal={selectedPandal}
@@ -166,15 +161,12 @@ export default function Home({ ganpatiPandals }: Props) {
               isSharedUrl={isSharedUrl}
             />
           </div>
-          <div className="w-full md:w-1/2 lg:w-1/3">
-            {/* Search pill — mobile only, above the list, opens the drawer */}
-            <div className="px-2 pb-1 pt-2 md:hidden">
-              <MobileSearchDrawer userLocation={userLocation} />
-            </div>
-            <PandalsVirutalList
+                    <div className={`w-full md:w-1/2 lg:w-1/3 ${mobileTab === 'map' ? 'hidden md:block' : ''}`}>
+            <PandalsVirtualList
               ganpatiPandals={ganpatiPandals}
-              onSelectPandal={handleSelectPandal}
+              onSelectPandal={(pandal) => { handleSelectPandal(pandal); setMobileTab('map'); }}
               userLocation={userLocation}
+              total={total}
             />
           </div>
         </div>

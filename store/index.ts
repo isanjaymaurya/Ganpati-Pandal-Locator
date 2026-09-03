@@ -11,15 +11,17 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import favouritePandalsReducer from './appSlice';
+import appReducer from './appSlice';
 import type { AppState } from './appSlice';
 
 const persistConfig = {
   key: 'favouritePandals',
   storage,
+  // UI state and should never be rehydrated on reload.
+  whitelist: ['favourites'] as (keyof AppState)[],
 };
 
-const persistedReducer = persistReducer<AppState>(persistConfig, favouritePandalsReducer);
+const persistedReducer = persistReducer<AppState>(persistConfig, appReducer);
 
 export const store = configureStore({
   reducer: {

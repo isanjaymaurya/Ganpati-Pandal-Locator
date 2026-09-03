@@ -1,7 +1,5 @@
 import React from 'react';
-
 import Image from 'next/image';
-
 import {
   ExternalLink,
   FileSpreadsheet,
@@ -35,7 +33,7 @@ const FEATURES = [
   {
     icon: <List size={22} />,
     title: 'Pandal Directory',
-    description: 'Browse a searchable, filterable list of all pandals with Name, Latitude & Longitude, Location and Google Map Link / Direction details.',
+    description: 'Browse a searchable, filterable list of all pandals with name, area, nearby station and Google Maps directions.',
     color: 'text-accent-pink'
   },
   {
@@ -64,7 +62,7 @@ const aboutJsonLd = {
   name: 'About - Ganpati Pandal Locator',
   url: 'https://isanjaymaurya.github.io/Ganpati-Pandal-Locator/about/',
   description:
-    'Learn about the Ganpati Pandal Locator app - a free, community-powered tool to find Ganesh Chaturthi pandals across Mumbai on an interactive map.',
+    'Learn about the Ganpati Pandal Locator app — a free, community-powered tool to find Ganesh Chaturthi pandals across Mumbai on an interactive map.',
   inLanguage: 'en-IN',
   isPartOf: {
     '@type': 'WebSite',
@@ -89,7 +87,7 @@ export default function AboutPage() {
         {/* ── Hero ── */}
         <div className="rounded-2xl border-2 border-accent-gold bg-surface shadow-md text-center flex flex-col items-center px-6 py-8 gap-3 relative overflow-hidden">
           {/* decorative gold top strip */}
-          <div className="absolute top-0 left-0 right-0 h-1" />
+          <div className="absolute top-0 left-0 right-0 h-1 bg-accent-gold" />
           <div className="w-20 h-20 rounded-full border-2 border-accent-gold bg-border/30 flex items-center justify-center shadow-md">
             <Image src={`${BASE}/ganpati-idol.png`} alt="Ganpati Idol" width={72} height={72} className="object-contain mt-4" />
           </div>
@@ -119,7 +117,7 @@ export default function AboutPage() {
           </p>
         </div>
 
-                {/* ── Features ── */}
+        {/* ── Features ── */}
         <div className="card">
           <h2 className="section-heading mb-4">
             <List size={18} className="text-primary-light" />
@@ -127,7 +125,7 @@ export default function AboutPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {FEATURES.map((f) => (
-                            <div
+              <div
                 key={f.title}
                 className="card-sm flex items-start gap-3"
               >
@@ -143,7 +141,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-                {/* ── Contribute ── */}
+        {/* ── Contribute ── */}
         <div className="card">
           <div className="flex items-center gap-2 mb-1">
             <div className="icon-box bg-success/10">
@@ -159,9 +157,9 @@ export default function AboutPage() {
             <Users size={18} className="text-primary-light shrink-0 mt-0.5" />
             <p className="text-xs text-text-secondary leading-relaxed">
               Fill in the pandal <strong className="text-text-primary">Name</strong>,{' '}
-              <strong className="text-text-primary">Latitude &amp; Longitude</strong>,{' '}
-              <strong className="text-text-primary">Nearby Stations</strong>,{' '}
-              <strong className="text-text-primary">Google Map Link</strong>. That&apos;s it!
+              <strong className="text-text-primary">Area / Address</strong>,{' '}
+              <strong className="text-text-primary">Nearby Station</strong>,{' '}
+              <strong className="text-text-primary">Google Maps link</strong>. That&apos;s it!
             </p>
           </div>
           <a
@@ -179,7 +177,7 @@ export default function AboutPage() {
                 {/* ── GitHub ── */}
         <div className="card">
           <div className="flex items-center gap-2 mb-1">
-            <div className="icon-box bg-primary-light/30">
+                        <div className="icon-box bg-primary-light/10">
               <GitBranch size={18} className="text-primary" />
             </div>
             <h2 className="text-base font-bold text-text-primary">Open Source on GitHub</h2>
@@ -200,6 +198,6 @@ export default function AboutPage() {
           </a>
         </div>
       </div>
-    </MainLayout>
+        </MainLayout>
   );
-};
+}

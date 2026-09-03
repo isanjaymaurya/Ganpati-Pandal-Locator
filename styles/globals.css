@@ -53,12 +53,6 @@
     background: linear-gradient(135deg, #a23217 0%, #b44024 40%, #c54628 70%, #C45000 100%);
   }
 
-  /* ── Mobile search drawer height ── */
-  .drawer-height {
-    max-height: 85dvh;
-    min-height: 85dvh;
-  }
-
   /* ── CSS triangle (gold upward-pointing) used in map markers ── */
   .marker-triangle {
     width: 0;
@@ -67,9 +61,40 @@
     border-right: 6px solid transparent;
     border-bottom: 6px solid var(--accent-gold);
   }
+
+  /* ── Custom tooltip (replaces native title= tooltips) ── */
+  /*
+   * Usage: <element class="tooltip" data-tooltip="Your text here">
+   * The tooltip appears above the element on hover/focus.
+   * max-width keeps long pandal location names from overflowing the screen.
+   */
+  .tooltip {
+    @apply relative;
+  }
+  .tooltip::after {
+    content: attr(data-tooltip);
+    @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+           bg-text-primary text-text-on-primary
+           text-[11px] leading-tight font-medium
+           px-2.5 py-1.5 rounded-lg
+           whitespace-normal text-center
+           pointer-events-none opacity-0
+           z-[99999]
+           transition-opacity duration-150;
+    max-width: min(220px, 90vw);
+    width: max-content;
+  }
+  .tooltip:hover::after,
+  .tooltip:focus-visible::after {
+    @apply opacity-100;
+  }
 }
 
 :root {
+  /* ── Layout ── */
+  --header-height: 3.5rem; /* h-14 = 3.5rem — update here if the header height changes */
+  --footer-height: 3.25rem; /* footer py-4 (~2rem) + border + text line — update if footer changes */
+
   /* ── Primary: Deep Saffron — the most sacred Hindu colour ── */
   --primary: #C45000;        /* deep saffron — dhwaj, robes */
   --primary-light: #E8650A;  /* marigold orange — puja flowers */
@@ -136,15 +161,18 @@ button {
   margin: 0px 0px 2.5px 0px !important;
 }
 
-.leaflet-touch .leaflet-control-attribution,
+/* Hide the layers control (not used) but keep the attribution visible
+ * to comply with the OpenStreetMap tile usage policy (DE-D). */
 .leaflet-touch .leaflet-control-layers {
   display: none !important;
 }
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+.leaflet-touch .leaflet-control-attribution {
+  font-size: 9px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 4px 0 0 0;
 }
+
+
 
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar{
   border: 0px !important;
@@ -152,12 +180,13 @@ button {
 
 .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out {
   font-size: 18px !important;
-  line-height: 27px !important;
+  line-height: 44px !important;
 }
 
 .leaflet-touch .leaflet-bar a {
-  width: 28px !important;
-  height: 28px !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  line-height: 2rem !important;
   border-radius: 9999px !important;
   border: 1px solid #000 !important;
 }
@@ -180,19 +209,20 @@ button {
  * On mobile each panel gets a comfortable fixed portion.
  */
 .map-panel-height {
-  /* mobile: bigger map so the search bar + map fill the screen well */
-  height: 58dvh;
+  height: calc(100dvh - var(--header-height) - 2.5rem);
 }
 
 .list-panel-height {
-  /* mobile: list below the map */
-  height: 42dvh;
+  height: calc(100dvh - var(--header-height) - 2.5rem);
 }
 
 @media (min-width: 768px) {
   .map-panel-height,
   .list-panel-height {
-    /* desktop: full viewport minus sticky header */
-    height: calc(100dvh - 7.6rem);
+    height: calc(100dvh - var(--header-height) - var(--footer-height));
   }
+}
+
+.leaflet-container .leaflet-control-attribution {
+  display: none !important;
 }

@@ -15,6 +15,6 @@ export const MOBILE_BREAKPOINT = 768;
  */
 export const MOBILE_MAP_OFFSET_FRACTION = 0.32;
 
-/** Fallback image shown when a pandal has no image or its image fails to load. */
-export const FALLBACK_PANDAL_IMAGE =
-  'https://images.prismic.io/mumbai-pandals/aKdKSKTt2nPbalaC_ganpatibappa.jpg?auto=format,compress';
+/** Fallback image shown when a pandal has no image or its image fails to load.
+ *  Served from public/ to avoid dependency on an external CDN. */
+export const FALLBACK_PANDAL_IMAGE = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/fallback-pandal.jpg`;

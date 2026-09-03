@@ -34,6 +34,7 @@ export default function GanpatiPandalsMap({
   const mapRef = useRef<L.Map | null>(null);
   const [popupIdx, setPopupIdx] = useState<number | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [tilesLoaded, setTilesLoaded] = useState(false);
 
   // Derive initial center/zoom from selectedPandal when opening via a shared URL.
   // MapContainer only reads `center` and `zoom` once on mount, so we compute
@@ -90,12 +91,22 @@ export default function GanpatiPandalsMap({
 
   return (
     <div className="relative">
-            <MapContainer
+      {!tilesLoaded && (
+        <div className="absolute inset-0 z-[400] bg-background flex items-center justify-center rounded-xl">
+          <div className="flex flex-col items-center gap-2 text-text-secondary">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs">Loading map…</span>
+          </div>
+        </div>
+      )}
+      <MapContainer
         center={initialCenter}
         zoom={initialZoom}
         className="map-panel-height w-full"
         ref={mapRef}
         zoomControl={false}
+        aria-label="Ganpati pandal map of Mumbai"
+        whenReady={() => setTilesLoaded(true)}
       >
         <ZoomControl position="bottomright" />
         <LocateControl userLocation={userLocation} onLocate={handleLocate} />

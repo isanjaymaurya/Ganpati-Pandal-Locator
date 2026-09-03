@@ -1,12 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { GanpatiPandal } from '@/types/global';
+import type { FavouritePandal, GanpatiPandal } from '@/types/global';
 
-export interface FavouritePandal {
-  name: string;
-  lat: number;
-  lng: number;
-}
+// Re-export so existing imports of FavouritePandal from this file keep working
+export type { FavouritePandal };
 
 export interface AppState {
   favourites: FavouritePandal[];
@@ -19,7 +16,7 @@ const initialState: AppState = {
 };
 
 const appSlice = createSlice({
-  name: 'favourites',
+  name: 'app',
   initialState,
   reducers: {
     addFavourite: (state, action: PayloadAction<FavouritePandal>) => {
