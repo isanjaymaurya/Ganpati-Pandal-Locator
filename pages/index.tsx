@@ -35,11 +35,11 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   });
 
   const ganpatiPandals: GanpatiPandal[] = parsed.data
-  .filter((p) => p.name?.trim() && p.latitude?.trim() && p.longitude?.trim())
-  .map((p) => ({
-    ...p,
-    is_famous: p.is_famous?.toLowerCase() === 'true',
-  }));
+    .filter((p) => p.name?.trim() && p.latitude?.trim() && p.longitude?.trim())
+    .map((p) => ({
+      ...p,
+      is_famous: p.is_famous?.toLowerCase() === 'true',
+    }));
 
   return {
     props: {
@@ -124,14 +124,14 @@ export default function Home({ ganpatiPandals }: Props) {
       description={`Explore ${total}+ Ganpati pandals across Mumbai this Ganesh Chaturthi. Find pandals near you on an interactive map, get Google Maps directions, search by name or location, and save your favourites.`}
       jsonLd={homeJsonLd}
     >
-            <div role="tablist" aria-label="View mode" className="md:hidden flex border-b border-border bg-surface sticky top-14 z-[900]">
+      <div role="tablist" aria-label="View mode" className="md:hidden flex border-b border-border bg-surface sticky top-14 z-[900]">
         <button
           role="tab"
           onClick={() => setMobileTab('map')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold transition-colors ${
             mobileTab === 'map'
               ? 'text-primary border-b-2 border-primary'
-              : 'text-text-secondary'
+              : 'text-text-secondary border-b-2'
           }`}
           aria-selected={mobileTab === 'map'}
         >
@@ -143,7 +143,7 @@ export default function Home({ ganpatiPandals }: Props) {
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold transition-colors ${
             mobileTab === 'list'
               ? 'text-primary border-b-2 border-primary'
-              : 'text-text-secondary'
+              : 'text-text-secondary border-b-2'
           }`}
           aria-selected={mobileTab === 'list'}
         >
@@ -161,7 +161,7 @@ export default function Home({ ganpatiPandals }: Props) {
               isSharedUrl={isSharedUrl}
             />
           </div>
-                    <div className={`w-full md:w-1/2 lg:w-1/3 ${mobileTab === 'map' ? 'hidden md:block' : ''}`}>
+          <div className={`w-full md:w-1/2 lg:w-1/3 ${mobileTab === 'map' ? 'hidden md:block' : ''}`}>
             <PandalsVirtualList
               ganpatiPandals={ganpatiPandals}
               onSelectPandal={(pandal) => { handleSelectPandal(pandal); setMobileTab('map'); }}

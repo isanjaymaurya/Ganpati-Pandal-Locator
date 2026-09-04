@@ -174,10 +174,10 @@ export default function AboutPage() {
           </a>
         </div>
 
-                {/* ── GitHub ── */}
+        {/* ── GitHub ── */}
         <div className="card">
           <div className="flex items-center gap-2 mb-1">
-                        <div className="icon-box bg-primary-light/10">
+            <div className="icon-box bg-primary-light/10">
               <GitBranch size={18} className="text-primary" />
             </div>
             <h2 className="text-base font-bold text-text-primary">Open Source on GitHub</h2>
@@ -198,6 +198,6 @@ export default function AboutPage() {
           </a>
         </div>
       </div>
-        </MainLayout>
+    </MainLayout>
   );
 }

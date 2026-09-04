@@ -1,9 +1,10 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { MapPinHouse, Navigation, Share2 } from 'lucide-react';
 
 import { FALLBACK_PANDAL_IMAGE } from '@/constants/map';
 import type { GanpatiPandal } from '@/types/global';
 import { formatDistance, getDistanceKm, isValidCoord } from '@/utils/geo';
+import { usePandalShare } from '@/hooks/usePandalShare';
 
 interface Props {
   pandal: GanpatiPandal;
@@ -11,7 +12,11 @@ interface Props {
 }
 
 const PandalPopupContent: React.FC<Props> = ({ pandal, userLocation }) => {
-  const [copied, setCopied] = useState(false);
+  const { copied, share } = usePandalShare({
+    name: pandal.name,
+    latitude: pandal.latitude,
+    longitude: pandal.longitude,
+  });
 
   const distance = useMemo(() => {
     if (!userLocation) return null;
@@ -20,23 +25,6 @@ const PandalPopupContent: React.FC<Props> = ({ pandal, userLocation }) => {
     if (!isValidCoord(lat, lng)) return null;
     return formatDistance(getDistanceKm(userLocation[0], userLocation[1], lat, lng));
   }, [pandal.latitude, pandal.longitude, userLocation]);
-
-  const handleShare = useCallback(() => {
-    const params = new URLSearchParams({
-      name: pandal.name,
-      lat: pandal.latitude,
-      lng: pandal.longitude,
-    });
-    const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
-    if (navigator.share) {
-      navigator.share({ title: pandal.name, text: `Check out ${pandal.name} pandal!`, url: shareUrl }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }).catch(() => {});
-    }
-  }, [pandal.name, pandal.latitude, pandal.longitude]);
 
   return (
     <section aria-label={`${pandal.name} pandal details`}>
@@ -66,7 +54,7 @@ const PandalPopupContent: React.FC<Props> = ({ pandal, userLocation }) => {
       <hr className="my-2" />
       <div className="flex items-center gap-1.5">
         <button
-          onClick={handleShare}
+          onClick={share}
           className="tooltip flex-center gap-1 border border-primary text-primary text-[11px] font-bold py-1.5 px-2.5 rounded hover:opacity-90 transition-opacity shadow-sm whitespace-nowrap"
           data-tooltip="Share this pandal"
         >

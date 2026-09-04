@@ -2,9 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { FavouritePandal, GanpatiPandal } from '@/types/global';
 
-// Re-export so existing imports of FavouritePandal from this file keep working
-export type { FavouritePandal };
-
 export interface AppState {
   favourites: FavouritePandal[];
   searchSelectedPandal: GanpatiPandal | null;
@@ -35,4 +32,3 @@ const appSlice = createSlice({
 
 export const { addFavourite, removeFavourite, setSearchSelectedPandal } = appSlice.actions;
 export default appSlice.reducer;
-

@@ -1,19 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List } from 'react-virtualized';
-import { ArrowUp, Search } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 import { addFavourite, removeFavourite } from '@/store/appSlice';
 import type { FavouritePandal } from '@/types/global';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import type { GanpatiPandal } from '@/types/global';
-import { formatDistance, getDistanceKm, isValidCoord } from '@/utils/geo';
-import { isFamous } from '@/utils/pandal';
+import { usePandalList } from '@/hooks/usePandalList';
 import SingleVerticalPandalCard from '@/components/SingleVerticalPandalCard/SingleVerticalPandalCard';
 import NearbyBanner from './NearbyBanner';
+import PandalEmptyState from './PandalEmptyState';
 import PandalListFilters, { type FavouriteFilterType } from './PandalListFilters';
-
-type PandalWithDistanceAndKm = { pandal: GanpatiPandal; distance: string | null; km: number };
-type PandalWithDistance = { pandal: GanpatiPandal; distance: string | null };
 
 interface Props {
   ganpatiPandals: GanpatiPandal[];
@@ -45,44 +42,13 @@ const PandalsVirtualList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal, u
     setSelectedIndex(null);
   }, [userLocation]);
 
-  const searchedPandals = useMemo(
-    () =>
-      ganpatiPandals.filter(
-        (p) =>
-          p.name.toLowerCase().includes(search.toLowerCase()) ||
-          p.location.toLowerCase().includes(search.toLowerCase()),
-      ),
-    [ganpatiPandals, search],
-  );
-
-  const pandalsWithDistance = useMemo((): PandalWithDistance[] => {
-    if (!userLocation) {
-      return [...searchedPandals]
-        .sort((a, b) => Number(isFamous(b)) - Number(isFamous(a)))
-        .map((p) => ({ pandal: p, distance: null }));
-    }
-    const [uLat, uLng] = userLocation;
-    const withKm: PandalWithDistanceAndKm[] = searchedPandals.map((p) => {
-      const lat = parseFloat(p.latitude);
-      const lng = parseFloat(p.longitude);
-      const km = isValidCoord(lat, lng) ? getDistanceKm(uLat, uLng, lat, lng) : Infinity;
-      return { pandal: p, distance: isFinite(km) ? formatDistance(km) : null, km };
-    });
-    withKm.sort((a, b) => a.km - b.km);
-    return withKm.map(({ pandal, distance }) => ({ pandal, distance }));
-  }, [searchedPandals, userLocation]);
-
-  const filteredPandals = useMemo(() => {
-    if (favouriteFilter === 'favourited')
-      return pandalsWithDistance.filter(({ pandal: p }) =>
-        favourites.some((fp: FavouritePandal) => fp.name === p.name),
-      );
-    if (favouriteFilter === 'non-favourited')
-      return pandalsWithDistance.filter(
-        ({ pandal: p }) => !favourites.some((fp: FavouritePandal) => fp.name === p.name),
-      );
-    return pandalsWithDistance;
-  }, [favouriteFilter, pandalsWithDistance, favourites]);
+  const filteredPandals = usePandalList({
+    pandals: ganpatiPandals,
+    search,
+    favouriteFilter,
+    favourites,
+    userLocation,
+  });
 
   const toggleFavourite = useCallback((pandal: GanpatiPandal) => {
     if (favourites.some((fp: FavouritePandal) => fp.name === pandal.name)) {
@@ -152,16 +118,7 @@ const PandalsVirtualList: React.FC<Props> = ({ ganpatiPandals, onSelectPandal, u
       <div className="relative flex-1">
         {userLocation && filteredPandals.length > 0 && <NearbyBanner />}
         {filteredPandals.length === 0 ? (
-          <div className="flex-center flex-col gap-3 h-full text-text-secondary">
-            <Search size={36} className="opacity-25" />
-            <p className="text-sm">
-              {search.length > 0
-                ? `No pandals found for "${search}"`
-                : favouriteFilter === 'favourited'
-                  ? 'No favourited pandals yet'
-                  : 'No pandals found'}
-            </p>
-          </div>
+          <PandalEmptyState search={search} favouriteFilter={favouriteFilter} />
         ) : (
           <AutoSizer>
             {({ height, width }) => (

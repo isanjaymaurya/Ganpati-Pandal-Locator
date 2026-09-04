@@ -1,19 +1,16 @@
-import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import React, { RefObject, useCallback, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import 'react-leaflet-markercluster/styles';
 
-import {
-  DEFAULT_CENTER,
-  MAX_ZOOM,
-  MOBILE_BREAKPOINT,
-  MOBILE_MAP_OFFSET_FRACTION,
-} from '@/constants/map';
+import { DEFAULT_CENTER, MAX_ZOOM } from '@/constants/map';
 import type { GanpatiPandal } from '@/types/global';
 import { isValidCoord } from '@/utils/geo';
+import { useMapFlyTo } from '@/hooks/useMapFlyTo';
 
 import LocateControl from './LocateControl';
+import MapLoadingOverlay from './MapLoadingOverlay';
 import PandalClusterLayer from './PandalClusterLayer';
 import UserLocationMarker from './UserLocationMarker';
 
@@ -53,52 +50,17 @@ export default function GanpatiPandalsMap({
     [onLocate],
   );
 
-  // Fly to the selected pandal whenever it changes.
-  useEffect(() => {
-    if (selectedPandal && mapRef.current) {
-      const lat = parseFloat(selectedPandal.latitude);
-      const lng = parseFloat(selectedPandal.longitude);
-      if (!isValidCoord(lat, lng)) return;
-
-      // Shared URL: map already opened at the correct location — just open the
-      // popup without flying (set view instantly instead of animating).
-      if (isSharedUrl?.current) {
-        mapRef.current.setView([lat, lng], MAX_ZOOM, { animate: false });
-      } else {
-        const map = mapRef.current;
-        const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-
-        if (isMobile) {
-          const mapSize = map.getSize();
-          const targetPoint = map.project([lat, lng], MAX_ZOOM);
-          const adjustedPoint = targetPoint.subtract([0, mapSize.y * MOBILE_MAP_OFFSET_FRACTION]);
-          map.flyTo(map.unproject(adjustedPoint, MAX_ZOOM), MAX_ZOOM, { animate: true, duration: 0.8 });
-        } else {
-          map.flyTo([lat, lng], MAX_ZOOM, { animate: true, duration: 0.8 });
-        }
-      }
-
-      const idx = ganpatiPandals.findIndex(
-        (p) => p.name === selectedPandal.name && p.location === selectedPandal.location,
-      );
-      setPopupIdx(idx !== -1 ? idx : null);
-    } else {
-      setPopupIdx(null);
-    }
-    // isSharedUrl is a stable ref — intentionally excluded from deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedPandal, ganpatiPandals]);
+  useMapFlyTo({
+    mapRef,
+    selectedPandal,
+    ganpatiPandals,
+    isSharedUrl,
+    onPopupIdx: setPopupIdx,
+  });
 
   return (
     <div className="relative">
-      {!tilesLoaded && (
-        <div className="absolute inset-0 z-[400] bg-background flex items-center justify-center rounded-xl">
-          <div className="flex flex-col items-center gap-2 text-text-secondary">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs">Loading map…</span>
-          </div>
-        </div>
-      )}
+      {!tilesLoaded && <MapLoadingOverlay />}
       <MapContainer
         center={initialCenter}
         zoom={initialZoom}

@@ -1,89 +1,21 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
-import { Check, ExternalLink, Menu, Share2, X } from 'lucide-react';
+import { ExternalLink, Menu, X } from 'lucide-react';
 
 import { NAV_ITEMS } from '@/components/navigation/navItems';
+import { useSidebarControls } from '@/hooks/useSidebarControls';
+import NavShareButton from './NavShareButton';
 
 const MobileNav: React.FC = () => {
   const { pathname } = useRouter();
-  const [open, setOpen] = useState(false);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  // Close on route change
-  useEffect(() => { setOpen(false); }, [pathname]);
-
- // Close on outside click
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open || !sidebarRef.current) return;
-    closeButtonRef.current?.focus();
-    const focusable = sidebarRef.current.querySelectorAll<HTMLElement>(
-      'a, button, [tabindex]:not([tabindex="-1"])'
-    );
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const trap = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-      if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-      } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-    document.addEventListener('keydown', trap);
-    return () => document.removeEventListener('keydown', trap);
-  }, [open]);
-
-    // Prevent body scroll when open
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [open]);
-
-  const [shared, setShared] = useState(false);
-
-  const handleShare = useCallback(async () => {
-    const shareData = {
-      title: 'Ganpati Pandal Locator',
-      text: 'Find Ganpati pandals near you across Mumbai this Ganesh Chaturthi!',
-      url: window.location.href,
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch {
-        // User cancelled or share failed — do nothing
-      }
-    } else {
-      // Fallback: copy URL to clipboard
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        setShared(true);
-        setTimeout(() => setShared(false), 2000);
-      } catch {
-        // Clipboard also unavailable — do nothing
-      }
-    }
-  }, []);
+  const { open, sidebarRef, closeButtonRef, openSidebar, closeSidebar } = useSidebarControls();
 
   return (
     <>
       {/* Hamburger button */}
-      <button
-        onClick={() => setOpen(true)}
+            <button
+        onClick={openSidebar}
         aria-label="Open menu"
         aria-expanded={open}
         aria-haspopup="dialog"
@@ -116,7 +48,7 @@ const MobileNav: React.FC = () => {
           <span className="font-bold text-sm tracking-wide uppercase">Menu</span>
           <button
             ref={closeButtonRef}
-            onClick={() => setOpen(false)}
+            onClick={closeSidebar}
             aria-label="Close menu"
             className="flex-center w-8 h-8 rounded-full border border-border hover:bg-black/10 transition-colors"
           >
@@ -137,7 +69,7 @@ const MobileNav: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={itemClass}
-                onClick={() => setOpen(false)}
+                onClick={closeSidebar}
               >
                 <span className="opacity-80">{icon}</span>
                 <span className="flex-1">{label}</span>
@@ -148,7 +80,7 @@ const MobileNav: React.FC = () => {
                 key={href}
                 href={href}
                 className={itemClass}
-                onClick={() => setOpen(false)}
+                onClick={closeSidebar}
               >
                 <span className="opacity-80">{icon}</span>
                 <span className="flex-1">{label}</span>
@@ -156,17 +88,7 @@ const MobileNav: React.FC = () => {
             );
           })}
 
-          {/* Share button — styled as a nav item */}
-          <button
-            onClick={handleShare}
-            aria-label="Share this app"
-            className="nav-item nav-item-inactive w-full"
-          >
-            <span className="opacity-80">
-              {shared ? <Check size={16} strokeWidth={1.8} /> : <Share2 size={16} strokeWidth={1.8} />}
-            </span>
-            <span className="flex-1 text-left">{shared ? 'Link Copied!' : 'Share'}</span>
-          </button>
+          <NavShareButton />
         </nav>
 
         {/* Footer */}
