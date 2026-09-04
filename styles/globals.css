@@ -88,6 +88,9 @@
   .tooltip:focus-visible::after {
     @apply opacity-100;
   }
+  .tooltip-below::after {
+    @apply top-full bottom-auto mt-1 mb-0 -ml-7;
+  }
 }
 
 :root {

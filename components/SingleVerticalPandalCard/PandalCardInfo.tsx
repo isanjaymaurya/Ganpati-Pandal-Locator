@@ -22,10 +22,10 @@ const PandalCardInfo: React.FC<Props> = ({
     <p className="font-semibold text-xs mb-0.5 text-text-primary uppercase line-clamp-1">
       {highlightMatch(name, search)}
     </p>
-    <p className="text-[10px] text-text-secondary mb-0.5 flex items-center gap-1 line-clamp-1 capitalize">
+    <p className="text-[10px] text-text-secondary mb-0.5 capitalize">
       {highlightMatch(location, search)}
       {distance && (
-        <span className="text-primary font-semibold whitespace-nowrap">· {distance}</span>
+        <span className="text-primary font-semibold whitespace-nowrap"> · {distance}</span>
       )}
     </p>
     {nearbyStation && (

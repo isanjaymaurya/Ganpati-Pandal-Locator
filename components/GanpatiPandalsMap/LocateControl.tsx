@@ -56,7 +56,7 @@ const LocateControl: React.FC<Props> = ({ userLocation, onLocate }) => {
           onClick={handleClick}
           data-tooltip={userLocation ? 'Go to my location' : 'Find my location'}
           aria-label={userLocation ? 'Go to my location' : 'Find my location'}
-          className="tooltip flex-center rounded-full border border-black bg-white shadow-sm w-8 h-8"
+          className="tooltip tooltip-below flex-center rounded-full border border-black bg-white shadow-sm w-8 h-8"
           disabled={locating}
         >
           <LocateFixed className={`w-4 h-4 ${locating ? 'animate-spin' : ''}`} />

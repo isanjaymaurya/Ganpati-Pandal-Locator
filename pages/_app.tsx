@@ -1,7 +1,6 @@
 import '@/styles/globals.css';
 
 import type { AppProps } from 'next/app';
-import { PagesProgressBar as NextNProgress } from 'next-nprogress-bar';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -31,12 +30,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <NextNProgress
-          color="#FFD700"
-          height="3px"
-          shallowRouting
-          options={{ easing: 'ease', speed: 400, showSpinner: false }}
-        />
         <Component {...pageProps} />
         <Toaster
           position="top-center"

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createVoice, JSVoice } from 'jsvoice/src';
 
 declare global {
   interface SpeechRecognition extends EventTarget {
@@ -8,15 +9,11 @@ declare global {
     maxAlternatives: number;
     start(): void;
     stop(): void;
-    abort(): void;
     onstart: ((this: SpeechRecognition, ev: Event) => void) | null;
     onend: ((this: SpeechRecognition, ev: Event) => void) | null;
     onerror: ((this: SpeechRecognition, ev: Event) => void) | null;
     onresult: ((this: SpeechRecognition, ev: Event) => void) | null;
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const SpeechRecognition: { new (): SpeechRecognition } | undefined;
 
   interface Window {
     SpeechRecognition: { new (): SpeechRecognition } | undefined;
@@ -40,17 +37,61 @@ export function useSpeechRecognition({
   onResult,
 }: UseSpeechRecognitionOptions): UseSpeechRecognitionReturn {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const voiceRef = useRef<JSVoice | null>(null);
+  const onResultRef = useRef(onResult);
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(false);
 
   useEffect(() => {
-    setSupported(
-      typeof window !== 'undefined' &&
-        ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window),
-    );
-  }, []);
+    onResultRef.current = onResult;
+  }, [onResult]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const hasNativeRecognition =
+      'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+
+    if (hasNativeRecognition) {
+      setSupported(true);
+      return;
+    }
+
+    const voice = createVoice({
+      lang,
+      continuous: false,
+      interimResults: false,
+      onCommandNotRecognized: (transcript) => {
+        const trimmedTranscript = transcript.trim();
+        if (trimmedTranscript) onResultRef.current(trimmedTranscript);
+      },
+      onEngineStateChange: (state) => {
+        setListening(
+          state === 'listening' || state === 'recording' || state === 'processing',
+        );
+        if (state === 'idle' || state === 'error') voiceRef.current = null;
+      },
+      onError: () => {
+        setListening(false);
+        voiceRef.current = null;
+      },
+    });
+
+    voiceRef.current = voice;
+    setSupported(true);
+
+    return () => {
+      voice.stop();
+      voiceRef.current = null;
+    };
+  }, [lang]);
 
   const start = useCallback(() => {
+    if (voiceRef.current) {
+      void voiceRef.current.start();
+      return;
+    }
+
     const API = window.SpeechRecognition ?? window.webkitSpeechRecognition;
     if (typeof API === 'undefined') return;
 
@@ -83,6 +124,13 @@ export function useSpeechRecognition({
   }, [lang, onResult]);
 
   const stop = useCallback(() => {
+    if (voiceRef.current) {
+      voiceRef.current.stop();
+      setListening(false);
+      voiceRef.current = null;
+      return;
+    }
+
     recognitionRef.current?.stop();
     setListening(false);
     recognitionRef.current = null;
