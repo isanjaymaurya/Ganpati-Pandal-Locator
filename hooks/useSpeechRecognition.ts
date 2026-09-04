@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-// SpeechRecognition class is absent from the standard TS DOM lib — declare it.
 declare global {
   interface SpeechRecognition extends EventTarget {
     lang: string;
@@ -12,8 +11,8 @@ declare global {
     abort(): void;
     onstart: ((this: SpeechRecognition, ev: Event) => void) | null;
     onend: ((this: SpeechRecognition, ev: Event) => void) | null;
-    onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => void) | null;
-    onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => void) | null;
+    onerror: ((this: SpeechRecognition, ev: Event) => void) | null;
+    onresult: ((this: SpeechRecognition, ev: Event) => void) | null;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,8 +62,9 @@ export function useSpeechRecognition({
 
     recognition.onstart = () => setListening(true);
 
-    recognition.onresult = (e: SpeechRecognitionEvent) => {
-      const transcript = e.results[0][0].transcript.trim();
+    recognition.onresult = (e: Event) => {
+      const se = e as unknown as { results: { [i: number]: { [j: number]: { transcript: string } } } };
+      const transcript = se.results[0][0].transcript.trim();
       if (transcript) onResult(transcript);
     };
 
